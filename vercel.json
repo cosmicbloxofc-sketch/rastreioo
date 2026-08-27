@@ -1,0 +1,41 @@
+{
+  "buildCommand": "echo 'No build needed'",
+  "functions": {
+    "api/consulta.php": {
+      "runtime": "php-8.3"
+    },
+    "api/pagamento.php": {
+      "runtime": "php-8.3"
+    }
+  },
+  "env": {
+    "EXPRESSAY_API_KEY": {
+      "description": "ExpressPay API Key"
+    },
+    "FUSIONPAY_API_KEY": {
+      "description": "FusionPay API Key"
+    },
+    "WINTECH_PUBLIC_KEY": {
+      "description": "Wintech Public Key"
+    },
+    "WINTECH_SECRET_KEY": {
+      "description": "Wintech Secret Key"
+    },
+    "GESTAOPAY_PUBLIC_KEY": {
+      "description": "GestãoPay Public Key"
+    },
+    "GESTAOPAY_SECRET_KEY": {
+      "description": "GestãoPay Secret Key"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/consulta",
+      "destination": "/api/consulta.php"
+    },
+    {
+      "source": "/api/pagamento",
+      "destination": "/api/pagamento.php"
+    }
+  ]
+}
