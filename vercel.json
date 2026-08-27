@@ -30,11 +30,19 @@
   },
   "rewrites": [
     {
+      "source": "/consulta.php",
+      "destination": "/api/consulta.php"
+    },
+    {
       "source": "/api/consulta",
       "destination": "/api/consulta.php"
     },
     {
       "source": "/api/pagamento",
+      "destination": "/api/pagamento.php"
+    },
+    {
+      "source": "/pagamento/api.php",
       "destination": "/api/pagamento.php"
     }
   ]
