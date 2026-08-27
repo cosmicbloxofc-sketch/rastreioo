@@ -1,0 +1,33 @@
+{
+    "orderId": "c9609cf903f04424bba6e140a298d597",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 14:33:58",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "ELISEU MOREIRA COELHO JUNIOR",
+        "email": "eliseu77@live.com",
+        "phone": "11111111111",
+        "document": "13999908610"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 14:33:58"
+}

@@ -1,0 +1,33 @@
+{
+    "orderId": "b1592020f0d54f2c9dfc08295f53ef6e",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 17:50:17",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "MARTA MARIA MILLEGO DE CASTRO",
+        "email": "mmillego@gmail.com",
+        "phone": "11999192211",
+        "document": "55566707815"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 17:50:17"
+}

@@ -1,0 +1,37 @@
+{
+    "orderId": "13766fb21eb044b7b4102b531009905e",
+    "platform": "Rastreioo",
+    "status": "paid",
+    "createdAt": "2026-08-27 02:51:52",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "MARIA LENILDA CARDOSO DE LIMA SILVA",
+        "email": "nildalenilda64@gmail.com",
+        "phone": "81979057324",
+        "document": "60715391453"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": null,
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": "2026-08-26 21:53:20",
+    "lastUtmifyResponse": {
+        "success": false,
+        "httpCode": 404,
+        "response": {
+            "OK": false,
+            "data": {
+                "type": "API_CREDENTIAL"
+            },
+            "result": "ERROR",
+            "statusCode": 404,
+            "message": "API_CREDENTIAL_NOT_FOUND"
+        }
+    },
+    "updatedAt": "2026-08-27 02:53:21"
+}

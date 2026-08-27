@@ -1,0 +1,44 @@
+[25/08/2026 16:33:58] c9609cf903f04424bba6e140a298d597 status=waiting_payment http=200
+[25/08/2026 17:04:06] afb881ea2ac84c538ed59b46fb7107a5 status=waiting_payment http=200
+[25/08/2026 17:04:29] 7782c02e0e5c4e4da0960a8b1c21b4a4 status=waiting_payment http=200
+[25/08/2026 17:04:40] 48be9efb0017475c9534d3701a9cdd37 status=waiting_payment http=200
+[25/08/2026 17:04:46] 79bc86a317894f91bd4e27e93933bda0 status=waiting_payment http=200
+[25/08/2026 17:05:30] 13efa72e477d4dffbbd033a3f2f793a3 status=waiting_payment http=200
+[25/08/2026 17:48:25] af8d3db8593c4439ab9d4c557c2f0d8c status=waiting_payment http=200
+[25/08/2026 17:59:56] 4f672861cc554317ba4953bb9d068bdc status=waiting_payment http=200
+[25/08/2026 18:00:21] 1408c88afcaf4703a448c9f0bb7bc176 status=waiting_payment http=200
+[25/08/2026 18:13:47] 7c31b3552bd04f7e85a9681f25b2003c status=waiting_payment http=200
+[25/08/2026 18:22:32] a21db2b21c214aa885f4c54f94684780 status=waiting_payment http=200
+[25/08/2026 19:42:45] 2664d224f1b94dfca023e06a17311994 status=waiting_payment http=200
+[25/08/2026 19:43:54] 14d9358b1a674bcb8ac7c8ec15263470 status=waiting_payment http=200
+[25/08/2026 19:45:41] 610343e53aff449584e04f5bee8c3621 status=waiting_payment http=200
+[25/08/2026 19:50:17] b1592020f0d54f2c9dfc08295f53ef6e status=waiting_payment http=200
+[25/08/2026 20:23:50] 99f775c683bc4995af43bdb97398960e status=waiting_payment http=200
+[25/08/2026 20:24:06] e4ec4895b7fb4848b96fa60e91ef9f40 status=waiting_payment http=200
+[25/08/2026 20:25:31] 99f775c683bc4995af43bdb97398960e status=paid http=200
+[25/08/2026 21:02:22] 6999c5a21ef94536b921c3d14b19b558 status=waiting_payment http=200
+[25/08/2026 21:03:46] 6999c5a21ef94536b921c3d14b19b558 status=paid http=200
+[25/08/2026 22:04:41] 83ca13fec9b94bf29b846d9f17215f32 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[25/08/2026 22:06:23] 83ca13fec9b94bf29b846d9f17215f32 status=paid http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[25/08/2026 22:27:22] 643131c93773433db96b92763e1cdb8d status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[25/08/2026 22:29:15] a5479c06ac834ab2bb080012367a9b48 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[25/08/2026 22:31:16] d13e8c6eff1b43c28ec73c17410b4321 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[25/08/2026 23:19:20] 92a40f542ee04b4395c5e6b0fc2e76a7 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 08:11:50] 8d9093eee4534c238b5d32c958513bb2 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 08:15:17] 8d9093eee4534c238b5d32c958513bb2 status=paid http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 08:16:40] 793615777ee045188822e5d67ebb6265 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 09:42:36] 90c0a0949a344352aa43abf94872b09f status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 09:43:39] e0ec52760b9e431eac1e9a03e6a30db8 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 09:47:28] 90c0a0949a344352aa43abf94872b09f status=paid http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 13:55:09] 8ec1da76167f4e5b9ac661d567c229ba status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 14:08:40] 7a87b8ce09934702bb6c44ccd8d1ac18 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 14:09:01] 2dae7d894c4c4591ae830e79047997c8 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 14:10:17] 7a87b8ce09934702bb6c44ccd8d1ac18 status=paid http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 14:10:26] 39fab9a01f464095acde70d76661bc3b status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 14:35:06] 947d089c09fa470791b9473664a3ef8b status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 18:07:29] c2a6c7bb8db74e4a80df5ad1614973b9 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[26/08/2026 19:51:12] bd2472851abf4a6284c1b70790ec73b7 status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
+[27/08/2026 00:21:22] 2b9eb0af07a54569896fe0f8fbab0251 status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
+[27/08/2026 00:22:34] e9382be3ad864a989eff7218f6eece1c status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
+[27/08/2026 04:51:52] 13766fb21eb044b7b4102b531009905e status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
+[27/08/2026 04:53:21] 13766fb21eb044b7b4102b531009905e status=paid http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}

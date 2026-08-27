@@ -1,0 +1,33 @@
+{
+    "orderId": "7c31b3552bd04f7e85a9681f25b2003c",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 16:13:46",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "Contribuinte",
+        "email": "mailovelloso1950@gmail.com",
+        "phone": "71999624770",
+        "document": "22270406534"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 16:13:47"
+}

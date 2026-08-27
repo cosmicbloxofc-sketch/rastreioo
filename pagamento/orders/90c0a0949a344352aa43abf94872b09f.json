@@ -1,0 +1,33 @@
+{
+    "orderId": "90c0a0949a344352aa43abf94872b09f",
+    "platform": "Rastreioo",
+    "status": "paid",
+    "createdAt": "2026-08-26 07:42:36",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "JOSE VIEIRA RIBEIRO",
+        "email": "josevieirarib1333@gmail.com",
+        "phone": "88994912533",
+        "document": "12070718115"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": null,
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": "2026-08-26 02:47:24",
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-26 07:47:28"
+}

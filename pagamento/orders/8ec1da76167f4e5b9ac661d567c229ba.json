@@ -1,0 +1,33 @@
+{
+    "orderId": "8ec1da76167f4e5b9ac661d567c229ba",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-26 11:55:08",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "PETRONELLA ROELFINA MARIA CRINS",
+        "email": "petracrins9@gmail.com",
+        "phone": "14996680107",
+        "document": "22875122843"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": null,
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-26 11:55:09"
+}

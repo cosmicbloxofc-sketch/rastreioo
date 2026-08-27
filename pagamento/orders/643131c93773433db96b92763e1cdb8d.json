@@ -1,0 +1,33 @@
+{
+    "orderId": "643131c93773433db96b92763e1cdb8d",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 20:27:22",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "CATARINA LUIZA ANTINOSSI",
+        "email": "cantinossi@gmail.com",
+        "phone": "31999594812",
+        "document": "25056689653"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 20:27:22"
+}

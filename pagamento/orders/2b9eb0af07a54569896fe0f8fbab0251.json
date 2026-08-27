@@ -1,0 +1,37 @@
+{
+    "orderId": "2b9eb0af07a54569896fe0f8fbab0251",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-26 22:21:21",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "JOAO FRANCO DE MORAIS",
+        "email": "francodemorais@gmail.com",
+        "phone": "69984786988",
+        "document": "19881576920"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": null,
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": false,
+        "httpCode": 404,
+        "response": {
+            "OK": false,
+            "data": {
+                "type": "API_CREDENTIAL"
+            },
+            "result": "ERROR",
+            "statusCode": 404,
+            "message": "API_CREDENTIAL_NOT_FOUND"
+        }
+    },
+    "updatedAt": "2026-08-26 22:21:22"
+}

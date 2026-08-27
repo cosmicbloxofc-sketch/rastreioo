@@ -1,0 +1,33 @@
+{
+    "orderId": "99f775c683bc4995af43bdb97398960e",
+    "platform": "Rastreioo",
+    "status": "paid",
+    "createdAt": "2026-08-25 18:23:49",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "INEZ VALERIA RAUPP HOLLER",
+        "email": "inezholler@hotmail.com",
+        "phone": "51989034023",
+        "document": "05502551091"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": "2026-08-25 13:25:30",
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 18:25:31"
+}

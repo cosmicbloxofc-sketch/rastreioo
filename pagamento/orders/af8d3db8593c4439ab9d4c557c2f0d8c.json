@@ -1,0 +1,33 @@
+{
+    "orderId": "af8d3db8593c4439ab9d4c557c2f0d8c",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 15:48:25",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "DELZA FARIA GUERRANTE",
+        "email": "delzaguerrante@gmail.com",
+        "phone": "21967546434",
+        "document": "10207325715"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 15:48:25"
+}

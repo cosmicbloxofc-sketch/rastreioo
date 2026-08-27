@@ -1,0 +1,33 @@
+{
+    "orderId": "8d9093eee4534c238b5d32c958513bb2",
+    "platform": "Rastreioo",
+    "status": "paid",
+    "createdAt": "2026-08-26 06:11:49",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "ILTON RODRIGUES DE OLIVEIRA",
+        "email": "iltonlmr2025@gmail.com",
+        "phone": "15998293115",
+        "document": "03626872858"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": null,
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": "2026-08-26 01:15:15",
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-26 06:15:17"
+}

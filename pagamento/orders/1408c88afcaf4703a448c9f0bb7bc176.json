@@ -1,0 +1,33 @@
+{
+    "orderId": "1408c88afcaf4703a448c9f0bb7bc176",
+    "platform": "Rastreioo",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-25 16:00:21",
+    "valorCentavos": 6161,
+    "customer": {
+        "name": "MARIA JULIA MESSIAS DE OLIVEIRA",
+        "email": "mariajuliamessias@terra.com.br",
+        "phone": "14997717918",
+        "document": "82468079868"
+    },
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null
+    },
+    "approvedDate": null,
+    "lastUtmifyResponse": {
+        "success": true,
+        "httpCode": 200,
+        "response": {
+            "OK": true,
+            "data": [],
+            "result": "SUCCESS"
+        }
+    },
+    "updatedAt": "2026-08-25 16:00:21"
+}
