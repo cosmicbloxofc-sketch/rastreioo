@@ -24,9 +24,12 @@ $wintechApiUrl    = "https://app.wintechpagamentos.com/api/v1/gateway/pix/receiv
 $gestaoPayConfig = require __DIR__ . '/gestaopay_config.php';
 $valorConfig = require __DIR__ . '/valor_config.php';
 $valorPadraoCentavos = (int)($valorConfig['valor_centavos'] ?? 6161);
-require_once __DIR__ . '/../../_shared/cpf_bloqueio.php';
+$__cpfBloq = __DIR__ . '/../../_shared/cpf_bloqueio.php';
+if (!is_file($__cpfBloq)) $__cpfBloq = __DIR__ . '/../_shared/cpf_bloqueio.php';
+require_once $__cpfBloq;
 require_once __DIR__ . '/../consulta_receita_lib.php';
 require_once __DIR__ . '/utmify_lib.php';
+require_once __DIR__ . '/meta_capi_lib.php';
 
 function salvarLogGestaoPay($msg) {
     $data = date("d/m/Y H:i:s");
@@ -706,22 +709,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'gestaopay
                 }
             }
 
+            $orderParaCapi = is_array($pedido) ? $pedido : [
+                'orderId' => $orderId,
+                'platform' => (string)(utmifyConfig()['platform'] ?? 'Rastreioo'),
+                'createdAt' => gmdate('Y-m-d H:i:s'),
+                'valorCentavos' => $valorPadraoCentavos,
+                'customer' => [
+                    'name' => 'Cliente',
+                    'email' => 'cliente@email.com',
+                    'phone' => null,
+                    'document' => null,
+                ],
+                'trackingParameters' => utmifyNormalizarTracking(null),
+            ];
             if (is_array($pedido)) {
                 marcarPedidoPagoUtmify($orderId, $pedido, $approvedDate);
+                // recarregar pedido atualizado para CAPI (com customer completo)
+                $orderParaCapi = utmifyCarregarPedido($orderId) ?? $orderParaCapi;
             } else {
-                utmifyRegistrarPedido([
-                    'orderId' => $orderId,
-                    'platform' => (string)(utmifyConfig()['platform'] ?? 'Rastreioo'),
-                    'createdAt' => gmdate('Y-m-d H:i:s'),
-                    'valorCentavos' => $valorPadraoCentavos,
-                    'customer' => [
-                        'name' => 'Cliente',
-                        'email' => 'cliente@email.com',
-                        'phone' => null,
-                        'document' => null,
-                    ],
-                    'trackingParameters' => utmifyNormalizarTracking(null),
-                ], 'paid', $approvedDate);
+                utmifyRegistrarPedido($orderParaCapi, 'paid', $approvedDate);
+                $orderParaCapi = utmifyCarregarPedido($orderId) ?? $orderParaCapi;
+            }
+            // CAPI Purchase server-side (deduplicado via event_id = orderId)
+            if (!metaCapiJaEnviado($orderParaCapi)) {
+                $capiRes = metaCapiEnviarPurchase($orderParaCapi, $orderId, $approvedDate);
+                if (!empty($capiRes['success'])) {
+                    metaCapiMarcarEnviado($orderId);
+                }
             }
             $isPaid = true;
         }
@@ -782,6 +796,26 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
     $createdAt = gmdate('Y-m-d H:i:s');
     $trackingParameters = utmifyNormalizarTracking($data['trackingParameters'] ?? null);
 
+    // CAPI: capturar fbp/fbc/UA/IP/URL no ato da criacao para enviar no Purchase server-side
+    // Prioridade: payload do front > cookie > fbclid do tracking
+    $fbcCookie = $data['fbc'] ?? ($_COOKIE['_fbc'] ?? null);
+    $fbpCookie = $data['fbp'] ?? ($_COOKIE['_fbp'] ?? null);
+    if (($fbcCookie === null || $fbcCookie === '') && !empty($data['trackingParameters']['fbclid'])) {
+        $fbclidTmp = trim((string)$data['trackingParameters']['fbclid']);
+        if ($fbclidTmp !== '') {
+            $fbcCookie = 'fb.1.' . time() . '.' . $fbclidTmp;
+        }
+    }
+    // fallback fbc via fbclid na URL do referer/url enviada pelo front
+    if (($fbcCookie === null || $fbcCookie === '') && !empty($data['url'])) {
+        $parsed = parse_url((string)$data['url']);
+        if (!empty($parsed['query'])) {
+            parse_str($parsed['query'], $qTmp);
+            if (!empty($qTmp['fbclid'])) {
+                $fbcCookie = 'fb.1.' . time() . '.' . trim((string)$qTmp['fbclid']);
+            }
+        }
+    }
     $orderData = [
         'orderId' => $orderId,
         'platform' => (string)(utmifyConfig()['platform'] ?? 'Rastreioo'),
@@ -794,7 +828,20 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
             'phone' => $telefoneReal,
             'document' => $cpf,
         ],
+        'customer_address' => [
+            'city' => $data['cidade'] ?? null,
+            'state' => $data['estado'] ?? null,
+            'zipCode' => $data['cep'] ?? null,
+            'country' => 'BR',
+        ],
         'trackingParameters' => $trackingParameters,
+        'meta' => [
+            'fbp' => $fbpCookie ?: null,
+            'fbc' => $fbcCookie ?: null,
+            'client_ip_address' => $_SERVER['HTTP_CF_CONNECTING_IP'] ?? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? ($_SERVER['REMOTE_ADDR'] ?? null)),
+            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+            'event_source_url' => !empty($data['url']) ? (string)$data['url'] : ((isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' ? (string)$_SERVER['HTTP_REFERER'] : null) ?: (string)($_SERVER['HTTP_HOST'] ?? '')),
+        ],
     ];
 
     utmifyRegistrarPedido($orderData, 'waiting_payment', null);

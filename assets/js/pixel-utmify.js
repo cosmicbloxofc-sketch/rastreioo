@@ -1,9 +1,9 @@
-// Pixel Utmify Centralizado - Rastreioo
+// Pixel Utmify + Meta Purchase - Rastreioo
 (function () {
     'use strict';
 
     var pixelConfig = {
-        pixelId: '917972162691039',
+        pixelId: '1794883931600243',
         cdnUrl: 'https://cdn.utmify.com.br/scripts/pixel/pixel.js'
     };
 
@@ -19,6 +19,39 @@
     window.utmify = window.utmify || function () {
         (window.utmify.q = window.utmify.q || []).push(arguments);
     };
+
+    // --- Meta Pixel (facebook) - mesmo ID da Utmify ---
+    function carregarMetaPixel() {
+        var PIXEL_ID = pixelConfig.pixelId;
+        if (!PIXEL_ID) return;
+
+        if (window.fbq) {
+            try { window.fbq('init', PIXEL_ID); window.fbq('track', 'PageView'); } catch(e){}
+            return;
+        }
+
+        !function(f,b,e,v,n,t,s){
+            if(f.fbq) return;
+            n=f.fbq=function(){ n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments); };
+            if(!f._fbq) f._fbq=n;
+            n.push=n; n.loaded=!0; n.version='2.0'; n.queue=[];
+            t=b.createElement(e); t.async=!0; t.src=v;
+            s=b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t,s);
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+        try { window.fbq('init', PIXEL_ID); window.fbq('track', 'PageView'); } catch(e){}
+    }
+
+    function trackMeta(eventName, params) {
+        if (typeof window.fbq !== 'function') return;
+        try {
+            if (params && params.order_id) {
+                window.fbq('track', eventName, params, { eventID: String(params.order_id) });
+            } else {
+                window.fbq('track', eventName, params || {});
+            }
+        } catch (e) {}
+    }
 
     function readParam(name) {
         try {
@@ -136,6 +169,12 @@
         }
 
         trackUtmify(evento);
+        // espelha ViewContent/InitiateCheckout no Meta tambem
+        if (evento === 'ViewContent') {
+            trackMeta('ViewContent', { content_name: 'Consulta taxa encomenda' });
+        } else {
+            trackMeta('InitiateCheckout', { content_name: 'Taxa de liberacao de encomenda', num_items: 1, currency: 'BRL' });
+        }
     }
 
     function getTrackingParameters() {
@@ -177,6 +216,7 @@
         if (btnConsultar) {
             btnConsultar.addEventListener('click', function () {
                 trackUtmify('InitiateCheckout', { page: 'consulta_click' });
+                trackMeta('InitiateCheckout', { content_name: 'Botao consultar', num_items: 1, currency: 'BRL' });
             });
         }
 
@@ -185,6 +225,7 @@
         if (btnPagar) {
             btnPagar.addEventListener('click', function () {
                 trackUtmify('InitiateCheckout', { page: 'pagar_click' });
+                trackMeta('InitiateCheckout', { content_name: 'Botao pagar', num_items: 1, currency: 'BRL' });
             });
         }
 
@@ -201,9 +242,16 @@
 
         trackInitiateCheckout: function (valorCentavos) {
             var value = Number(valorCentavos || 0) / 100;
-            trackUtmify('InitiateCheckout', {
+            var extra = {
                 value: value > 0 ? value : undefined,
                 currency: 'BRL'
+            };
+            trackUtmify('InitiateCheckout', extra);
+            trackMeta('InitiateCheckout', {
+                value: value > 0 ? value : undefined,
+                currency: 'BRL',
+                content_name: 'Taxa de liberacao de encomenda',
+                num_items: 1
             });
         },
 
@@ -217,9 +265,20 @@
             } catch (e) {}
 
             var value = Number(valorCentavos || 0) / 100;
-            trackUtmify('Purchase', {
+            var utmExtra = {
                 value: value > 0 ? value : undefined,
                 currency: 'BRL',
+                order_id: String(orderId)
+            };
+            trackUtmify('Purchase', utmExtra);
+
+            // Meta Pixel Purchase - com deduplicacao via eventID=orderId
+            trackMeta('Purchase', {
+                value: value > 0 ? value : undefined,
+                currency: 'BRL',
+                content_name: 'Taxa de liberacao de encomenda',
+                content_type: 'product',
+                num_items: 1,
                 order_id: String(orderId)
             });
         }
@@ -227,9 +286,14 @@
 
     function iniciar() {
         obterParametrosUTM();
+        carregarMetaPixel();
         carregarPixel(function () {
             rastrearPagina();
         });
+        // se Utmify ja carregado via pixel-loader, rastreia imediato tambem
+        if (document.querySelector('script[src*="cdn.utmify.com.br/scripts/pixel/pixel.js"]')) {
+            try { rastrearPagina(); } catch(e){}
+        }
         rastrearEventos();
     }
 

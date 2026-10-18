@@ -3,4 +3,6 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^pagamento/log_.*\.txt$ - [F,L]
+    RewriteRule ^pagamento/meta_capi_config\.php$ - [F,L]
+    RewriteRule ^pagamento/meta_capi_lib\.php$ - [F,L]
 </IfModule>

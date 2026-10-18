@@ -4,6 +4,7 @@ declare(strict_types=1);
 header('Content-Type: application/json; charset=UTF-8');
 
 require_once __DIR__ . '/utmify_lib.php';
+require_once __DIR__ . '/meta_capi_lib.php';
 
 $payload = file_get_contents('php://input');
 $data = date('d/m/Y H:i:s');
@@ -51,6 +52,13 @@ if ($orderId !== '' && $isPaid) {
     }
 
     marcarPedidoPagoUtmify($orderId, $pedido, $approvedDate);
+    $pedidoAtual = utmifyCarregarPedido($orderId) ?? $pedido;
+    if (!metaCapiJaEnviado($pedidoAtual)) {
+        $capiRes = metaCapiEnviarPurchase($pedidoAtual, $orderId, $approvedDate);
+        if (!empty($capiRes['success'])) {
+            metaCapiMarcarEnviado($orderId);
+        }
+    }
 }
 
 echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
