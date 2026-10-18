@@ -8,26 +8,6 @@
       "runtime": "php-8.3"
     }
   },
-  "env": {
-    "EXPRESSAY_API_KEY": {
-      "description": "ExpressPay API Key"
-    },
-    "FUSIONPAY_API_KEY": {
-      "description": "FusionPay API Key"
-    },
-    "WINTECH_PUBLIC_KEY": {
-      "description": "Wintech Public Key"
-    },
-    "WINTECH_SECRET_KEY": {
-      "description": "Wintech Secret Key"
-    },
-    "GESTAOPAY_PUBLIC_KEY": {
-      "description": "GestãoPay Public Key"
-    },
-    "GESTAOPAY_SECRET_KEY": {
-      "description": "GestãoPay Secret Key"
-    }
-  },
   "rewrites": [
     {
       "source": "/consulta.php",
