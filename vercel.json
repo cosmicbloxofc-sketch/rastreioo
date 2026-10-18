@@ -2,10 +2,10 @@
   "buildCommand": "echo 'No build needed'",
   "functions": {
     "api/consulta.php": {
-      "runtime": "php-8.3"
+      "runtime": "vercel-php@0.7.4"
     },
     "api/pagamento.php": {
-      "runtime": "php-8.3"
+      "runtime": "vercel-php@0.7.4"
     }
   },
   "rewrites": [
