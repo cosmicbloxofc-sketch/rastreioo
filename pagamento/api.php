@@ -1,7 +1,6 @@
 <?php
-// DEBUG (desligar em produÃ§Ã£o)
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
+error_reporting(0);
 
 // HEADERS
 header("Access-Control-Allow-Origin: *");
@@ -33,7 +32,7 @@ require_once __DIR__ . '/meta_capi_lib.php';
 
 function salvarLogGestaoPay($msg) {
     $data = date("d/m/Y H:i:s");
-    file_put_contents(__DIR__ . "/log_gestaopay.txt", "[$data] $msg\n\n", FILE_APPEND);
+    @file_put_contents(__DIR__ . "/log_gestaopay.txt", "[$data] $msg\n\n", FILE_APPEND);
 }
 
 function extrairErroGestaoPay($res, $fallback = 'Erro ao gerar PIX') {
@@ -117,7 +116,7 @@ function consultarStatusGestaoPay(string $orderId): array
 
 function salvarLogWintech($msg) {
     $data = date("d/m/Y H:i:s");
-    file_put_contents(__DIR__ . "/log_wintech.txt", "[$data] $msg\n\n", FILE_APPEND);
+    @file_put_contents(__DIR__ . "/log_wintech.txt", "[$data] $msg\n\n", FILE_APPEND);
 }
 
 function normalizarTelefone(string $telefone): string
@@ -140,7 +139,7 @@ function normalizarTelefone(string $telefone): string
 
 function salvarLogFuriapay($msg) {
     $data = date("d/m/Y H:i:s");
-    file_put_contents(__DIR__ . "/log_furiapay.txt", "[$data] $msg\n\n", FILE_APPEND);
+    @file_put_contents(__DIR__ . "/log_furiapay.txt", "[$data] $msg\n\n", FILE_APPEND);
 }
 
 function parseEmvTlv(string $payload): array
@@ -334,7 +333,7 @@ if ($_GET['act'] === 'new') {
     $valor = isset($data["valor"]) ? (int)$data["valor"] : $valorPadraoCentavos;
     
     // Log para debug do valor
-    file_put_contents('log.txt', "VALOR RECEBIDO: " . ($data["valor"] ?? 'NÃƒO ENVIADO') . "\nVALOR USADO: $valor\n\n", FILE_APPEND);
+    @file_put_contents('log.txt', "VALOR RECEBIDO: " . ($data["valor"] ?? 'NÃƒO ENVIADO') . "\nVALOR USADO: $valor\n\n", FILE_APPEND);
 
     $apiUrl = 'https://api.fusionpaybr.com.br/v1/transactions';
 
@@ -392,13 +391,13 @@ if ($_GET['act'] === 'new') {
     $error = curl_error($curl);
     curl_close($curl);
 
-    file_put_contents('log.txt', "HTTP: $httpCode\nErro: $error\nResposta:\n$response\nPayload:\n$payload");
+    @file_put_contents('log.txt', "HTTP: $httpCode\nErro: $error\nResposta:\n$response\nPayload:\n$payload");
 
     if ($httpCode === 200) {
         $responseData = json_decode($response, true);
         
         // Log da resposta para debug
-        file_put_contents('log.txt', "RESPOSTA FUSIONPAY:\n" . json_encode($responseData, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        @file_put_contents('log.txt', "RESPOSTA FUSIONPAY:\n" . json_encode($responseData, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
         
         // Estrutura da Fusion Pay (baseada no correios6)
         $pixCode = $responseData['pix']['qrcode'] ?? $responseData['data']['pix']['qrcode'] ?? null;
@@ -428,7 +427,7 @@ if ($_GET["act"] === "check") {
     $orderId = $input["orderId"] ?? null;
 
     // Log para debug
-    file_put_contents('log.txt', "CHECK PAYMENT - OrderId: " . ($orderId ?? 'NULL') . "\nInput: " . json_encode($input) . "\n\n", FILE_APPEND);
+    @file_put_contents('log.txt', "CHECK PAYMENT - OrderId: " . ($orderId ?? 'NULL') . "\nInput: " . json_encode($input) . "\n\n", FILE_APPEND);
 
     if (!$orderId) {
         http_response_code(400);
@@ -505,7 +504,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'rastrear'
         'nascimento' => $receita['data_nascimento'] ?? '',
     ];
     if ($cpfInfo['nome'] !== '') {
-        file_put_contents("log.txt", "CPF $cpfLimpo OK: {$cpfInfo['nome']}\n", FILE_APPEND);
+        @file_put_contents("log.txt", "CPF $cpfLimpo OK: {$cpfInfo['nome']}\n", FILE_APPEND);
     }
     $dataNasc = $cpfInfo['nascimento'] !== '' ? $cpfInfo['nascimento'] : gerarDataNascimentoPorCPF($codigo);
 
@@ -530,7 +529,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'rastrear'
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'fusion_new') {
     $input = file_get_contents("php://input");
     $data = json_decode($input, true);
-    file_put_contents("log.txt", "REQUISIÃ‡ÃƒO FUSIONPAY:\n$input\n\n", FILE_APPEND);
+    @file_put_contents("log.txt", "REQUISIÃ‡ÃƒO FUSIONPAY:\n$input\n\n", FILE_APPEND);
 
     if (!$data || !isset($data["valor"])) {
         echo json_encode(["error" => "Dados invÃ¡lidos ou ausentes."]);
@@ -604,7 +603,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'fusion_ne
     curl_close($curl);
 
     // LOGA RESPOSTA
-    file_put_contents("fusion_debug.txt", "PAYLOAD:\n$payload\n\nHTTP $httpCode:\n$response\n\n", FILE_APPEND);
+    @file_put_contents("fusion_debug.txt", "PAYLOAD:\n$payload\n\nHTTP $httpCode:\n$response\n\n", FILE_APPEND);
 
     if (!$response) {
         echo json_encode(["error" => "Erro de conexÃ£o com a FusionPay"]);
