@@ -56,9 +56,20 @@ function extrairErroGestaoPay($res, $fallback = 'Erro ao gerar PIX') {
 }
 
 function postbackUrlGestaoPay() {
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    // Em producao Vercel, usar URL canonica que sempre resolve (rewrites cobrem /pagamento/webhook)
+    $envUrl = getenv('GESTAOPAY_POSTBACK_URL') ?: '';
+    if ($envUrl !== '') return $envUrl;
+    // Detecta host Vercel vs local e força canonical
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    // Se estiver em Vercel (api/pagamento.php), dirname = /api — corrigir para /pagamento
     $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['PHP_SELF'] ?? '/pagamento')), '/');
+    if ($dir === '/api') $dir = '/pagamento';
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'https://';
+    // Fallback canonical para producao conhecida
+    if (str_contains($host, 'rastreioo-phi') || str_contains($host, 'minhapendencia') || str_contains($host, 'vercel.app')) {
+        // usar /pagamento/webhook_gestaopay.php (tem rewrite -> /api/webhook_gestaopay.php)
+        return 'https://' . $host . '/pagamento/webhook_gestaopay.php';
+    }
     return $scheme . $host . $dir . '/webhook_gestaopay.php';
 }
 
@@ -185,7 +196,7 @@ function extrairNominalPix(string $pixCode): ?string
     return $nome !== '' ? $nome : null;
 }
 
-function gerarPixFusionPay($valor, $nome, $email, $telefone, $cpf) {
+function gerarPixFusionPay($valor, $nome, $email, $telefone, $cpf, ?array $extraMeta = null) {
     global $gestaoPayConfig;
 
     $publicKey = (string)($gestaoPayConfig['public_key'] ?? '');
@@ -222,11 +233,19 @@ function gerarPixFusionPay($valor, $nome, $email, $telefone, $cpf) {
             'quantity' => 1,
             'tangible' => false,
         ]],
-        'metadata' => [
+        'metadata' => array_filter([
             'provider_name' => 'nova2026',
             'external_id' => $identifier,
             'telefone_cliente' => $telefoneLimpo,
-        ],
+            'fbp' => $extraMeta['fbp'] ?? null,
+            'fbc' => $extraMeta['fbc'] ?? null,
+            'url' => $extraMeta['url'] ?? null,
+            'utm_source' => $extraMeta['utm_source'] ?? null,
+            'utm_campaign' => $extraMeta['utm_campaign'] ?? null,
+            'utm_medium' => $extraMeta['utm_medium'] ?? null,
+            'src' => $extraMeta['src'] ?? null,
+            'sck' => $extraMeta['sck'] ?? null,
+        ], fn($v) => $v !== null && $v !== ''),
         'pix' => [
             'expires_in_days' => 1,
         ],
@@ -781,7 +800,29 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
     $valorCentavos = $valorPadraoCentavos;
     $valor         = $valorCentavos / 100;
 
-    $resultado = gerarPixFusionPay($valor, $nomeReal, $emailReal, $telefoneReal, $cpf);
+    // Preparar meta fb antes, para injetar no metadata do GestãoPay (webhook recuperar em container efêmero)
+    $fbpPre = $data['fbp'] ?? ($_COOKIE['_fbp'] ?? null);
+    $fbcPre = $data['fbc'] ?? ($_COOKIE['_fbc'] ?? null);
+    if (($fbcPre === null || $fbcPre === '') && !empty($data['trackingParameters']['fbclid'])) {
+        $fbclidTmp = trim((string)$data['trackingParameters']['fbclid']);
+        if ($fbclidTmp !== '') $fbcPre = 'fb.1.' . time() . '.' . $fbclidTmp;
+    }
+    if (($fbcPre === null || $fbcPre === '') && !empty($data['url'])) {
+        $parsedTmp = parse_url((string)$data['url']);
+        if (!empty($parsedTmp['query'])) { parse_str($parsedTmp['query'], $qTmp2); if (!empty($qTmp2['fbclid'])) $fbcPre = 'fb.1.' . time() . '.' . trim((string)$qTmp2['fbclid']); }
+    }
+    $extraMeta = [
+        'fbp' => $fbpPre ?: null,
+        'fbc' => $fbcPre ?: null,
+        'url' => !empty($data['url']) ? (string)$data['url'] : null,
+        'utm_source' => $data['trackingParameters']['utm_source'] ?? null,
+        'utm_campaign' => $data['trackingParameters']['utm_campaign'] ?? null,
+        'utm_medium' => $data['trackingParameters']['utm_medium'] ?? null,
+        'src' => $data['trackingParameters']['src'] ?? null,
+        'sck' => $data['trackingParameters']['sck'] ?? null,
+    ];
+
+    $resultado = gerarPixFusionPay($valor, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
 
     if (!($resultado["success"] ?? false)) {
         echo json_encode([
