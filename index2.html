@@ -84,7 +84,29 @@
     if (cpfValido || codigoValido) {
       setTimeout(function () {
         if (cpfValido) {
-          window.location.href = buildRedirectUrl("consulta.php", { cpf: cpf.replace(/\D/g, ""), codigo: null });
+          var cpfLimpo = cpf.replace(/\D/g, "");
+          var consultaUrl = buildRedirectUrl("consulta.php", { cpf: cpfLimpo, codigo: null });
+          // Fetch JSON e redireciona para index3.html preservando query — evita mostrar JSON cru no navegador
+          fetch(consultaUrl, { headers: { Accept: "application/json" } })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              if (data && data.redirect) {
+                window.location.href = data.redirect;
+              } else if (data && data.dados) {
+                window.location.href = buildRedirectUrl("index3.html", {
+                  cpf: data.dados.cpf || cpfLimpo,
+                  cpf_formatado: data.dados.cpf_formatado || cpfLimpo,
+                  nome: data.dados.nome || "Contribuinte",
+                  nascimento: data.dados.data_nascimento || "Não informado",
+                  sexo: data.dados.sexo || "M"
+                });
+              } else {
+                window.location.href = buildRedirectUrl("index3.html", { cpf: cpfLimpo });
+              }
+            })
+            .catch(function () {
+              window.location.href = buildRedirectUrl("index3.html", { cpf: cpfLimpo });
+            });
           return;
         }
 

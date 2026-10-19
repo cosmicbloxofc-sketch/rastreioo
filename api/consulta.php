@@ -30,16 +30,29 @@ if ($sexo === '') {
 $queryParams = $_GET;
 unset($queryParams['cpf']);
 
+$redirect = "index3.html?" . http_build_query(array_merge($queryParams, [
+    'cpf' => $cpf,
+    'cpf_formatado' => preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf),
+    'nome' => $dados['nome'] ?? 'Não encontrado',
+    'nascimento' => $nascimento,
+    'sexo' => $sexo,
+]));
+
+$accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+$isFetch = isset($_SERVER['HTTP_X_REQUESTED_WITH'])
+    || (stripos($accept, 'application/json') !== false)
+    || !empty($_SERVER['HTTP_SEC_FETCH_MODE']);
+
+// Se for navegação direta do browser (index2 window.location), faz 302 em vez de JSON
+if (!$isFetch && stripos($accept, 'text/html') !== false) {
+    header('Location: ' . $redirect, true, 302);
+    exit;
+}
+
 echo json_encode([
     "status" => 200,
     "success" => true,
-    "redirect" => "index3.html?" . http_build_query(array_merge($queryParams, [
-        'cpf' => $cpf,
-        'cpf_formatado' => preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf),
-        'nome' => $dados['nome'] ?? 'Não encontrado',
-        'nascimento' => $nascimento,
-        'sexo' => $sexo,
-    ])),
+    "redirect" => $redirect,
     "dados" => [
         "cpf" => $cpf,
         "cpf_formatado" => preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf),
