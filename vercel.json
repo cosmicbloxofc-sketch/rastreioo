@@ -18,12 +18,8 @@
       "destination": "/api/pagamento.php"
     }
   ],
-  "outputDirectory": ".",
   "functions": {
-    "api/consulta.php": {
-      "runtime": "vercel-php@0.7.4"
-    },
-    "api/pagamento.php": {
+    "api/*.php": {
       "runtime": "vercel-php@0.7.4"
     }
   }
