@@ -27,6 +27,14 @@
     {
       "source": "/pagamento/index.php",
       "destination": "/api/pagamento-page.php"
+    },
+    {
+      "source": "/pagamento/webhook_gestaopay.php",
+      "destination": "/api/webhook_gestaopay.php"
+    },
+    {
+      "source": "/api/webhook_gestaopay",
+      "destination": "/api/webhook_gestaopay.php"
     }
   ],
   "functions": {
