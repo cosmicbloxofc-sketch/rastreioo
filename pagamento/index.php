@@ -225,7 +225,7 @@ $codigoRastreio = $codigoRaw !== ''
 
     paymentPollInterval = setInterval(async function () {
       try {
-        const response = await fetch('api.php?act=gestaopay_check', {
+        const response = await fetch('/api/pagamento?act=gestaopay_check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ orderId: orderId })
@@ -363,7 +363,7 @@ $codigoRastreio = $codigoRaw !== ''
     if (favorecidoEl) favorecidoEl.textContent = '—';
 
     try {
-      const response = await fetch('api.php?act=wintech_new', {
+      const response = await fetch('/api/pagamento?act=wintech_new', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
