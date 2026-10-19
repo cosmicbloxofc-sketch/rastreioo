@@ -17,5 +17,6 @@
       "source": "/pagamento/api.php",
       "destination": "/api/pagamento.php"
     }
-  ]
+  ],
+  "outputDirectory": "."
 }
