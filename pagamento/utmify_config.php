@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 return [
-    // Token: Integrações → Webhooks → Credenciais de API na Utmify
-    'api_token' => '7JNoBE91HyqX1YDcseLgLYtZ65ykBVUCZaLv',
+    // Token Utmify Time Fai — eventos gerado (waiting_payment) e pago (paid)
+    'api_token' => getenv('UTMIFY_API_TOKEN') ?: 'HixlWaXpVpgA2Ur55p6lL5Kf95813QEXsO5i',
     'platform' => 'Rastreioo',
 ];
