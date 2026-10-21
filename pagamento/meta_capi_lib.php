@@ -270,16 +270,24 @@ function metaCapiMarcarEnviado(string $orderId): bool
 {
     $dir = __DIR__ . '/orders';
     $path = $dir . '/' . preg_replace('/[^a-zA-Z0-9._-]/', '', $orderId) . '.json';
-    if (!is_file($path)) return false;
-    $raw = @file_get_contents($path);
-    if ($raw === false || $raw === '') return false;
-    $data = json_decode($raw, true);
+    $data = null;
+    if (is_file($path)) {
+        $raw = @file_get_contents($path);
+        if ($raw !== false && $raw !== '') {
+            $d = json_decode($raw, true);
+            if (is_array($d)) $data = $d;
+        }
+    }
+    if (!is_array($data)) {
+        // tenta do KV (container diferente)
+        $data = call_user_func('utmifyKvGet', $orderId);
+    }
     if (!is_array($data)) return false;
-    // ja enviado?
     if (!empty($data['meta_capi_sent'])) return true;
     $data['meta_capi_sent'] = true;
     $data['meta_capi_sent_at'] = gmdate('Y-m-d H:i:s');
     @file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+    @utmifyKvSet($orderId, json_encode($data, JSON_UNESCAPED_UNICODE));
     return true;
 }
 

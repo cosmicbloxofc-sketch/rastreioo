@@ -10,6 +10,82 @@ function utmifyConfig(): array
     return $config;
 }
 
+/**
+ * Storage compartilhado entre invocações (Vercel serverless usa FS efêmero,
+ * o webhook pode cair em container diferente do create -> orders/*.json some).
+ * Se KV_REST_API_URL + KV_REST_API_TOKEN (Upstash/Vercel KV) estiverem setados,
+ * pedidos são persistidos no KV REST e atravessam containers de forma confiável.
+ * Sem KV, cai no arquivo local (comportamento atual).
+ */
+function utmifyKvConfig(): array
+{
+    return [
+        'url' => (string)(getenv('KV_REST_API_URL') ?: ''),
+        'token' => (string)(getenv('KV_REST_API_TOKEN') ?: ''),
+    ];
+}
+
+function utmifyKvEnabled(): bool
+{
+    $cfg = utmifyKvConfig();
+    return $cfg['url'] !== '' && $cfg['token'] !== '';
+}
+
+function utmifyKvKey(string $orderId): string
+{
+    return 'rastreioo:order:' . preg_replace('/[^a-zA-Z0-9._-]/', '', $orderId);
+}
+
+function utmifyKvSet(string $orderId, string $json): bool
+{
+    if (!utmifyKvEnabled()) return false;
+    $cfg = utmifyKvConfig();
+    $url = rtrim($cfg['url'], '/') . '/set/' . rawurlencode(utmifyKvKey($orderId));
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => $json,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $cfg['token'],
+            'Content-Type: application/json',
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+    ]);
+    $resp = curl_exec($ch);
+    $ok = curl_errno($ch) === 0;
+    curl_close($ch);
+    return $ok;
+}
+
+function utmifyKvGet(string $orderId): ?array
+{
+    if (!utmifyKvEnabled()) return null;
+    $cfg = utmifyKvConfig();
+    $url = rtrim($cfg['url'], '/') . '/get/' . rawurlencode(utmifyKvKey($orderId));
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $cfg['token']],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+    ]);
+    $resp = curl_exec($ch);
+    curl_close($ch);
+    if ($resp === false || $resp === '') return null;
+    $decoded = json_decode($resp, true);
+    // Upstash REST retorna {"result":"...json string..."}
+    $value = $decoded['result'] ?? ($decoded['data'] ?? null);
+    if (is_string($value)) {
+        $data = json_decode($value, true);
+        return is_array($data) ? $data : null;
+    }
+    return null;
+}
+
 function utmifyOrdersDir(): string
 {
     $dir = __DIR__ . '/orders';
@@ -27,20 +103,27 @@ function utmifySalvarPedido(string $orderId, array $data): void
         'updatedAt' => gmdate('Y-m-d H:i:s'),
     ]);
     @file_put_contents($path, json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+    // também espelha no KV para atravessar containers (multiplataforma: local + Vercel)
+    @utmifyKvSet($orderId, json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 
 function utmifyCarregarPedido(string $orderId): ?array
 {
     $path = utmifyOrdersDir() . '/' . preg_replace('/[^a-zA-Z0-9._-]/', '', $orderId) . '.json';
-    if (!is_file($path)) {
-        return null;
+    if (is_file($path)) {
+        $raw = @file_get_contents($path);
+        if ($raw !== false && $raw !== '') {
+            $data = json_decode($raw, true);
+            if (is_array($data)) return $data;
+        }
     }
-    $raw = @file_get_contents($path);
-    if ($raw === false || $raw === '') {
-        return null;
+    // fallback no KV (webhook em outro container) — salva localmente p/ idempotência
+    $kv = utmifyKvGet($orderId);
+    if (is_array($kv)) {
+        @file_put_contents($path, json_encode($kv, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+        return $kv;
     }
-    $data = json_decode($raw, true);
-    return is_array($data) ? $data : null;
+    return null;
 }
 
 function utmifyNormalizarTracking(?array $tracking): array

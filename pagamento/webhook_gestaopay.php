@@ -30,6 +30,9 @@ if ($orderId === '' && isset($event['data']) && is_array($event['data'])) {
     $isPaid = in_array($statusRaw, ['PAID', 'APPROVED', 'COMPLETED'], true);
 }
 
+$processed = false;
+$detail = 'no_paid';
+
 if ($orderId !== '' && $isPaid) {
     // Tentar extrair dados ricos do payload GestãoPay quando orders/*.json sumiu (Vercel ephemeral)
     $evData = $event['data'] ?? ($event['request'] ?? $event);
@@ -89,7 +92,20 @@ if ($orderId !== '' && $isPaid) {
         if (!empty($capiRes['success'])) {
             metaCapiMarcarEnviado($orderId);
         }
+        $processed = !empty($capiRes['success']);
+        $detail = 'utmify+meta fired';
+    } else {
+        $processed = true;
+        $detail = 'already_sent';
     }
 }
 
-echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
+echo json_encode([
+    'ok' => true,
+    'processed' => $processed,
+    'detail' => $detail,
+    'orderId' => $orderId,
+    'status' => $statusRaw,
+    'kv' => utmifyKvEnabled() ? 'enabled' : 'file',
+    'time' => gmdate('Y-m-d H:i:s'),
+], JSON_UNESCAPED_UNICODE);
