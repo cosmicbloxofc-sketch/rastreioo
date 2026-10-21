@@ -84,6 +84,17 @@ function metaCapiExtractFbpFbc(array $order): array
         }
     }
 
+    // Fallback final: fbclid dentro de event_source_url (ultimo recurso)
+    if (($fbc === null || $fbc === '') && !empty($order['meta']['event_source_url'])) {
+        $parsed = parse_url((string)$order['meta']['event_source_url']);
+        if (!empty($parsed['query'])) {
+            parse_str($parsed['query'], $qUrl);
+            if (!empty($qUrl['fbclid'])) {
+                $fbc = 'fb.1.' . time() . '.' . trim((string)$qUrl['fbclid']);
+            }
+        }
+    }
+
     return ['fbp' => $fbp ?: null, 'fbc' => $fbc ?: null];
 }
 

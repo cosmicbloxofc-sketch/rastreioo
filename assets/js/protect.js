@@ -34,6 +34,8 @@
             for (i = 0; i < cookies.length; i++) {
                 nome = cookies[i].split('=')[0].replace(/^\s+|\s+$/g, '');
                 if (!nome) continue;
+                // NUNCA apagar cookies do Facebook (_fbp/_fbc) - sao essenciais para atribuicao
+                if (nome.indexOf('_fbp') === 0 || nome.indexOf('_fbc') === 0 || nome.indexOf('_fb') === 0) continue;
                 document.cookie = nome + '=;' + exp + ';path=/';
                 document.cookie = nome + '=;' + exp + ';path=/;domain=' + host;
                 if (partes.length > 1) {

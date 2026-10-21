@@ -161,7 +161,17 @@
       document.getElementById("codigoRastreio").textContent = codigoFormatado;
       document.getElementById("codigoTimeline").textContent = codigoFormatado;
 
-      var destino = "rastreio.html?codigo=" + encodeURIComponent(codigo);
+      function buildRedirectUrl(path, updates) {
+        var nextParams = new URLSearchParams(window.location.search);
+        Object.keys(updates || {}).forEach(function (k) {
+          var v = updates[k];
+          if (v === null || v === undefined || v === '') nextParams.delete(k);
+          else nextParams.set(k, v);
+        });
+        var qs = nextParams.toString();
+        return path + (qs ? '?' + qs : '');
+      }
+      var destino = buildRedirectUrl("rastreio.html", { codigo: codigo });
       document.getElementById("link-regularizar").href = destino;
       document.getElementById("link-pagamento").href = destino;
 

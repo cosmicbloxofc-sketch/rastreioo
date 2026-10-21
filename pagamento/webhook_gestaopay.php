@@ -50,6 +50,10 @@ if ($orderId !== '' && $isPaid) {
         'utm_source' => $evMeta['utm_source'] ?? null,
         'utm_campaign' => $evMeta['utm_campaign'] ?? null,
         'utm_medium' => $evMeta['utm_medium'] ?? null,
+        'utm_content' => $evMeta['utm_content'] ?? null,
+        'utm_term' => $evMeta['utm_term'] ?? null,
+        'fbclid' => $evMeta['fbclid'] ?? null,
+        'xcod' => $evMeta['xcod'] ?? null,
         'src' => $evMeta['src'] ?? null,
         'sck' => $evMeta['sck'] ?? null,
     ] : null);

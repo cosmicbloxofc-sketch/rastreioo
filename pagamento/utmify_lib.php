@@ -129,7 +129,7 @@ function utmifyCarregarPedido(string $orderId): ?array
 function utmifyNormalizarTracking(?array $tracking): array
 {
     $tracking = is_array($tracking) ? $tracking : [];
-    $keys = ['src', 'sck', 'utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term'];
+    $keys = ['src', 'sck', 'utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'fbclid', 'xcod'];
     $out = [];
     foreach ($keys as $key) {
         $value = $tracking[$key] ?? null;

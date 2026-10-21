@@ -12,7 +12,7 @@
         'xcod', 'src', 'fbclid', 'sck', 'subid'
     ];
 
-    var API_TRACKING_KEYS = ['src', 'sck', 'utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term'];
+    var API_TRACKING_KEYS = ['src', 'sck', 'utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'fbclid', 'xcod'];
 
     window.pixelId = pixelConfig.pixelId;
 
@@ -185,6 +185,14 @@
             var value = (utmParams[key] || '').trim();
             out[key] = value || null;
         });
+
+        // Garantir que fbclid sempre vai mesmo se UTM_KEYS falhar (fallback direto da URL)
+        if (!out.fbclid) {
+            try {
+                var directFbclid = new URLSearchParams(window.location.search).get('fbclid');
+                if (directFbclid) out.fbclid = directFbclid.trim();
+            } catch(e) {}
+        }
 
         return out;
     }
