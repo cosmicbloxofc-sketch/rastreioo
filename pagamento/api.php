@@ -68,8 +68,9 @@ function postbackUrlGestaoPay() {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'https://';
     // Fallback canonical para producao conhecida
     if (str_contains($host, 'rastreioo-phi') || str_contains($host, 'minhapendencia') || str_contains($host, 'vercel.app')) {
-        // usar /pagamento/webhook_gestaopay.php (tem rewrite -> /api/webhook_gestaopay.php)
-        return 'https://' . $host . '/pagamento/webhook_gestaopay.php';
+        // IMPORTANTE: /pagamento/*.php e arquivo estatico no Vercel -> POST retorna 405.
+        // O endpoint real de function e /api/webhook_gestaopay.php.
+        return 'https://' . $host . '/api/webhook_gestaopay.php';
     }
     return $scheme . $host . $dir . '/webhook_gestaopay.php';
 }

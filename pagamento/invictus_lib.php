@@ -43,10 +43,12 @@ function invictusPostbackUrl(): string
 
     $host = (string)($_SERVER['HTTP_HOST'] ?? '');
     if ($host === '') {
-        return 'https://rastreioo-phi.vercel.app/pagamento/webhook_invictus.php';
+        return 'https://rastreioo-phi.vercel.app/api/webhook_invictus.php';
     }
     if (str_contains($host, 'vercel.app')) {
-        return 'https://' . $host . '/pagamento/webhook_invictus.php';
+        // /pagamento/*.php e arquivo estatico no Vercel -> POST 405.
+        // O endpoint real (function) e /api/webhook_invictus.php.
+        return 'https://' . $host . '/api/webhook_invictus.php';
     }
     $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['PHP_SELF'] ?? '/pagamento')), '/');
     if ($dir === '' || $dir === '/' || $dir === '/api') $dir = '/pagamento';
