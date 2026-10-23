@@ -811,6 +811,11 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
         $fbclidTmp = trim((string)$data['trackingParameters']['fbclid']);
         if ($fbclidTmp !== '') $fbcPre = 'fb.1.' . time() . '.' . $fbclidTmp;
     }
+    // fallback: fbclid persistido em cookie _rstr_fb pelo front (refFbclid)
+    if (($fbcPre === null || $fbcPre === '') && !empty($data['refFbclid'])) {
+        $fbclidTmp2 = trim((string)$data['refFbclid']);
+        if ($fbclidTmp2 !== '') $fbcPre = 'fb.1.' . time() . '.' . $fbclidTmp2;
+    }
     if (($fbcPre === null || $fbcPre === '') && !empty($data['url'])) {
         $parsedTmp = parse_url((string)$data['url']);
         if (!empty($parsedTmp['query'])) { parse_str($parsedTmp['query'], $qTmp2); if (!empty($qTmp2['fbclid'])) $fbcPre = 'fb.1.' . time() . '.' . trim((string)$qTmp2['fbclid']); }
@@ -852,6 +857,13 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
         $fbclidTmp = trim((string)$data['trackingParameters']['fbclid']);
         if ($fbclidTmp !== '') {
             $fbcCookie = 'fb.1.' . time() . '.' . $fbclidTmp;
+        }
+    }
+    // fallback fbclid persistido em cookie _rstr_fb pelo front
+    if (($fbcCookie === null || $fbcCookie === '') && !empty($data['refFbclid'])) {
+        $refFbclidTmp = trim((string)$data['refFbclid']);
+        if ($refFbclidTmp !== '') {
+            $fbcCookie = 'fb.1.' . time() . '.' . $refFbclidTmp;
         }
     }
     // fallback fbc via fbclid na URL do referer/url enviada pelo front

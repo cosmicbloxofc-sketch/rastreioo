@@ -351,6 +351,13 @@ $codigoRastreio = $codigoRaw !== ''
     } catch(e) { return ''; }
   }
 
+  function getFbCookieParams() {
+    try {
+      if (typeof window.__getFbParams === 'function') return window.__getFbParams() || {};
+    } catch(e) {}
+    return {};
+  }
+
   async function gerarPix() {
     const nome = document.getElementById('name').value.trim();
     const cpf = document.getElementById('document').value.replace(/\D/g, '');
@@ -383,7 +390,8 @@ $codigoRastreio = $codigoRaw !== ''
           valor: valorCentavos,
           trackingParameters: getTrackingPayload(),
           fbp: readCookie('_fbp') || null,
-          fbc: readCookie('_fbc') || null,
+          fbc: readCookie('_fbc') || (getFbCookieParams().fbc || null),
+          refFbclid: getFbCookieParams().fbclid || null,
           referer: document.referrer || null,
           url: location.href
         })

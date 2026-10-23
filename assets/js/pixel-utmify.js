@@ -65,6 +65,10 @@
         var params = new URLSearchParams(window.location.search);
         var result = {};
 
+        // Prioridade: cookies persistentes FB (_rstr_fb) -> URL -> localStorage
+        var fbParams = {};
+        try { fbParams = (typeof window.__getFbParams === 'function') ? (window.__getFbParams() || {}) : {}; } catch(e) {}
+
         UTM_KEYS.forEach(function (key) {
             var value = params.get(key);
             if (value) {
@@ -72,10 +76,11 @@
                     localStorage.setItem(key, value);
                 } catch (e) {}
             }
+            var fallbackFb = (key === 'fbclid' || key === 'fbc') ? (fbParams[key] || '') : '';
             try {
-                result[key] = value || localStorage.getItem(key) || '';
+                result[key] = value || fallbackFb || localStorage.getItem(key) || '';
             } catch (e) {
-                result[key] = value || '';
+                result[key] = value || fallbackFb || '';
             }
         });
 
