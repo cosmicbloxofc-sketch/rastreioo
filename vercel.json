@@ -35,6 +35,14 @@
     {
       "source": "/api/webhook_gestaopay",
       "destination": "/api/webhook_gestaopay.php"
+    },
+    {
+      "source": "/pagamento/webhook_invictus.php",
+      "destination": "/api/webhook_invictus.php"
+    },
+    {
+      "source": "/api/webhook_invictus",
+      "destination": "/api/webhook_invictus.php"
     }
   ],
   "functions": {

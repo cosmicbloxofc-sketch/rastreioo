@@ -29,6 +29,7 @@ require_once $__cpfBloq;
 require_once __DIR__ . '/../consulta_receita_lib.php';
 require_once __DIR__ . '/utmify_lib.php';
 require_once __DIR__ . '/meta_capi_lib.php';
+require_once __DIR__ . '/invictus_lib.php';
 
 function salvarLogGestaoPay($msg) {
     $data = date("d/m/Y H:i:s");
@@ -917,5 +918,209 @@ if (isset($_GET["act"]) && $_GET["act"] === "wintech_new") {
     exit;
 }
 
-echo json_encode(["error" => "AÃ§Ã£o invÃ¡lida. Use ?act=new, ?act=check, ?act=rastrear, ?act=fusion_new, ?act=fusion_check, ?act=gestaopay_check ou ?act=wintech_new"]);
+// ACAO: /api.php?act=invictus_new - CRIAR PIX INVICTUSPAY
+if (isset($_GET["act"]) && $_GET["act"] === "invictus_new") {
+    $input = file_get_contents("php://input");
+    $data = json_decode($input, true);
+
+    if (!$data || !isset($data["valor"])) {
+        echo json_encode(["error" => "Dados invalidos"]);
+        exit;
+    }
+
+    $nomeReal = (string)($data["name"] ?? "Cliente");
+    $emailReal = strtolower(trim((string)($data["email"] ?? "anonimo@email.com")));
+    $cpf = preg_replace('/\D/', '', (string)($data["cpf"] ?? ''));
+    $telefoneReal = normalizarTelefone((string)($data['telefone'] ?? ($data['phone'] ?? '')));
+
+    if (empty($cpf)) {
+        echo json_encode(["error" => "CPF invalido"]);
+        exit;
+    }
+
+    $bloqueio = cpf_bloqueio_verificar($data, 'nova2026');
+    if ($bloqueio !== null) {
+        echo json_encode($bloqueio);
+        exit;
+    }
+
+    $valorCentavos = $valorPadraoCentavos;
+    $trackingParameters = utmifyNormalizarTracking($data['trackingParameters'] ?? null);
+
+    // fbp/fbc com todos os fallbacks (payload > cookie > fbclid tracking > refFbclid > url)
+    $fbpCookie = $data['fbp'] ?? ($_COOKIE['_fbp'] ?? null);
+    $fbcCookie = $data['fbc'] ?? ($_COOKIE['_fbc'] ?? null);
+    $fbclidFinal = '';
+    if (!empty($trackingParameters['fbclid'])) $fbclidFinal = trim((string)$trackingParameters['fbclid']);
+    if ($fbclidFinal === '' && !empty($data['refFbclid'])) $fbclidFinal = trim((string)$data['refFbclid']);
+    if ($fbclidFinal === '' && !empty($data['url'])) {
+        $parsedFb = parse_url((string)$data['url']);
+        if (!empty($parsedFb['query'])) {
+            parse_str($parsedFb['query'], $qFb);
+            if (!empty($qFb['fbclid'])) $fbclidFinal = trim((string)$qFb['fbclid']);
+        }
+    }
+    if (($fbcCookie === null || $fbcCookie === '') && $fbclidFinal !== '') {
+        $fbcCookie = 'fb.1.' . time() . '.' . $fbclidFinal;
+    }
+    if ($fbclidFinal === '' && !empty($fbpCookie)) {
+        // sem click id; segue apenas com fbp
+    }
+
+    $extraMeta = [
+        'fbp' => $fbpCookie ?: null,
+        'fbc' => $fbcCookie ?: null,
+        'fbclid' => $fbclidFinal !== '' ? $fbclidFinal : null,
+        'url' => !empty($data['url']) ? (string)$data['url'] : null,
+        'utm_source' => $trackingParameters['utm_source'] ?? null,
+        'utm_campaign' => $trackingParameters['utm_campaign'] ?? null,
+        'utm_medium' => $trackingParameters['utm_medium'] ?? null,
+        'utm_content' => $trackingParameters['utm_content'] ?? null,
+        'utm_term' => $trackingParameters['utm_term'] ?? null,
+        'xcod' => $trackingParameters['xcod'] ?? null,
+        'src' => $trackingParameters['src'] ?? null,
+        'sck' => $trackingParameters['sck'] ?? null,
+    ];
+
+    $resultado = invictusCriarPix($valorCentavos, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
+
+    $providerUsado = 'invictus';
+    if (!($resultado['success'] ?? false)) {
+        // Fallback automatico: se Invictus falhar, tenta GestaoPay para nao perder a venda
+        salvarLogGestaoPay('INVICTUS FALHOU -> fallback GestaoPay: ' . (string)($resultado['error'] ?? 'erro'));
+        $resultado = gerarPixFusionPay($valor, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
+        $providerUsado = 'gestaopay';
+    }
+
+    if (!($resultado['success'] ?? false)) {
+        echo json_encode([
+            'error' => $resultado['error'] ?? 'Erro no pagamento',
+            'detalhes' => $resultado,
+        ]);
+        exit;
+    }
+
+    $orderId = (string)($resultado['transaction_id'] ?? '');
+    $createdAt = gmdate('Y-m-d H:i:s');
+
+    $orderData = [
+        'orderId' => $orderId,
+        'provider' => $providerUsado,
+        'platform' => (string)(utmifyConfig()['platform'] ?? 'Rastreioo'),
+        'status' => 'waiting_payment',
+        'createdAt' => $createdAt,
+        'valorCentavos' => $valorCentavos,
+        'reference' => (string)($resultado['reference'] ?? ''),
+        'postbackUrl' => (string)($resultado['postback_url'] ?? ''),
+        'customer' => [
+            'name' => $nomeReal,
+            'email' => $emailReal,
+            'phone' => $telefoneReal,
+            'document' => $cpf,
+        ],
+        'customer_address' => [
+            'city' => $data['cidade'] ?? null,
+            'state' => $data['estado'] ?? null,
+            'zipCode' => $data['cep'] ?? null,
+            'country' => 'BR',
+        ],
+        'trackingParameters' => $trackingParameters,
+        'meta' => [
+            'fbp' => $fbpCookie ?: null,
+            'fbc' => $fbcCookie ?: null,
+            'fbclid' => $fbclidFinal !== '' ? $fbclidFinal : null,
+            'client_ip_address' => $_SERVER['HTTP_CF_CONNECTING_IP'] ?? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? ($_SERVER['REMOTE_ADDR'] ?? null)),
+            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+            'event_source_url' => !empty($data['url']) ? (string)$data['url'] : ((isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' ? (string)$_SERVER['HTTP_REFERER'] : null) ?: (string)($_SERVER['HTTP_HOST'] ?? '')),
+        ],
+    ];
+
+    utmifyRegistrarPedido($orderData, 'waiting_payment', null);
+
+    echo json_encode([
+        'pixQrCode' => $resultado['pix_qrcode_url'] ?? '',
+        'pixCode' => $resultado['pix_code'] ?? '',
+        'pixFavorecido' => $resultado['pix_favorecido'] ?? '',
+        'orderId' => $orderId,
+        'provider' => $providerUsado,
+    ]);
+
+    exit;
+}
+
+// ACAO: /api.php?act=invictus_check - VERIFICAR PAGAMENTO INVICTUSPAY
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'invictus_check') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $orderId = (string)($input['orderId'] ?? '');
+
+    if ($orderId === '') {
+        http_response_code(400);
+        echo json_encode(['error' => 'ID do pedido nao informado']);
+        exit;
+    }
+
+    $pedido = utmifyCarregarPedido($orderId);
+    $localStatus = strtolower((string)($pedido['status'] ?? ''));
+    $isPaid = in_array($localStatus, ['paid', 'approved', 'completed'], true);
+
+    if (!$isPaid) {
+        $check = invictusConsultar($orderId);
+        if (($check['paid'] ?? false)) {
+            $approvedDate = gmdate('Y-m-d H:i:s');
+            $paidAt = (string)($check['paid_at'] ?? '');
+            if ($paidAt !== '' && $paidAt !== '0001-01-01T00:00:00') {
+                $ts = strtotime($paidAt);
+                if ($ts !== false) $approvedDate = gmdate('Y-m-d H:i:s', $ts);
+            }
+
+            if (is_array($pedido)) {
+                marcarPedidoPagoUtmify($orderId, $pedido, $approvedDate);
+                $orderParaCapi = utmifyCarregarPedido($orderId) ?? $pedido;
+            } else {
+                $customer = is_array($check['customer'] ?? null) ? $check['customer'] : [];
+                $orderParaCapi = [
+                    'orderId' => $orderId,
+                    'provider' => 'invictus',
+                    'platform' => (string)(utmifyConfig()['platform'] ?? 'Rastreioo'),
+                    'createdAt' => gmdate('Y-m-d H:i:s'),
+                    'valorCentavos' => (int)($check['amount'] ?? $valorPadraoCentavos),
+                    'customer' => [
+                        'name' => (string)($customer['name'] ?? 'Cliente'),
+                        'email' => (string)($customer['email'] ?? 'cliente@email.com'),
+                        'phone' => $customer['phone'] ?? null,
+                        'document' => $customer['document'] ?? null,
+                    ],
+                    'trackingParameters' => utmifyNormalizarTracking(null),
+                    'meta' => array_filter([
+                        'fbp' => $_COOKIE['_fbp'] ?? null,
+                        'fbc' => $_COOKIE['_fbc'] ?? null,
+                        'event_source_url' => $_SERVER['HTTP_REFERER'] ?? null,
+                    ], fn($v) => $v !== null && $v !== ''),
+                ];
+                utmifyRegistrarPedido($orderParaCapi, 'paid', $approvedDate);
+                $orderParaCapi = utmifyCarregarPedido($orderId) ?? $orderParaCapi;
+            }
+
+            // CAPI Purchase server-side (dedup event_id = orderId)
+            if (!metaCapiJaEnviado($orderParaCapi)) {
+                $capiRes = metaCapiEnviarPurchase($orderParaCapi, $orderId, $approvedDate);
+                if (!empty($capiRes['success'])) {
+                    metaCapiMarcarEnviado($orderId);
+                }
+            }
+
+            $isPaid = true;
+        }
+    }
+
+    echo json_encode([
+        'status' => $isPaid ? 'PAID' : 'PENDING',
+        'paid' => $isPaid,
+        'orderId' => $orderId,
+        'provider' => 'invictus',
+    ]);
+    exit;
+}
+
+echo json_encode(["error" => "AÃ§Ã£o invÃ¡lida. Use ?act=new, ?act=check, ?act=rastrear, ?act=fusion_new, ?act=fusion_check, ?act=gestaopay_check, ?act=wintech_new, ?act=invictus_new ou ?act=invictus_check"]);
 

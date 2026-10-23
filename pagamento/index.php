@@ -208,6 +208,7 @@ $codigoRastreio = $codigoRaw !== ''
   let timerSeconds = 15 * 60;
   let paymentPollInterval = null;
   let checkoutTracked = false;
+  let currentProvider = 'invictus';
 
   function getTrackingPayload() {
     if (window.RastreiooTracking && typeof window.RastreiooTracking.getTrackingParameters === 'function') {
@@ -227,7 +228,8 @@ $codigoRastreio = $codigoRaw !== ''
 
     paymentPollInterval = setInterval(async function () {
       try {
-        const response = await fetch('/api/pagamento?act=gestaopay_check', {
+        const checkAct = (currentProvider === 'gestaopay') ? 'gestaopay_check' : 'invictus_check';
+        const response = await fetch('/api/pagamento?act=' + checkAct, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ orderId: orderId })
@@ -331,6 +333,7 @@ $codigoRastreio = $codigoRaw !== ''
 
   function showSuccess(res) {
     pixCodeFull = res.pixCode || '';
+    currentProvider = (res.provider === 'gestaopay') ? 'gestaopay' : 'invictus';
     pixInput.value = truncarPix(pixCodeFull);
     renderQr(pixCodeFull, res.pixQrCode || '');
     atualizarFavorecido(res, pixCodeFull);
@@ -372,7 +375,7 @@ $codigoRastreio = $codigoRaw !== ''
     if (favorecidoEl) favorecidoEl.textContent = '—';
 
     try {
-      const response = await fetch('/api/pagamento?act=wintech_new', {
+      const response = await fetch('/api/pagamento?act=invictus_new', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
