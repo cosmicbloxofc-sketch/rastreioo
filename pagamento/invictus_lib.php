@@ -123,7 +123,7 @@ function invictusCriarPix(
     string $telefone,
     string $cpf,
     ?array $extraMeta = null,
-    string $descricao = 'Taxa de liberacao de encomenda'
+    string $descricao = 'Curso Mesa Posta'
 ): array {
     $doc = preg_replace('/\D/', '', $cpf);
     $phone = preg_replace('/\D/', '', $telefone);

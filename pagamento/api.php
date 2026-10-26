@@ -230,7 +230,7 @@ function gerarPixFusionPay($valor, $nome, $email, $telefone, $cpf, ?array $extra
             ],
         ],
         'items' => [[
-            'title' => 'Produto',
+            'title' => 'Curso Mesa Posta',
             'unit_price' => $valorCentavos,
             'quantity' => 1,
             'tangible' => false,
@@ -386,7 +386,7 @@ if ($_GET['act'] === 'new') {
             ]
         ],
         "items" => [[
-            "title" => "TAX7982745",
+            "title" => "Curso Mesa Posta",
             "unitPrice" => $valor,
             "quantity" => 1,
             "tangible" => false,
@@ -598,7 +598,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['act'] ?? '') === 'fusion_ne
             ]
         ],
         "items" => [[
-            "title" => "P536587",
+            "title" => "Curso Mesa Posta",
             "unitPrice" => $valor,
             "quantity" => 1,
             "tangible" => false,
