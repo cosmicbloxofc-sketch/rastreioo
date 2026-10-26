@@ -161,10 +161,10 @@ function utmifyMontarPayload(array $order, string $status, ?string $approvedDate
             'country' => 'BR',
         ],
         'products' => [[
-            'id' => 'taxa-liberacao-encomenda',
-            'name' => 'Taxa de liberação de encomenda',
+            'id' => 'curso-mesa-posta',
+            'name' => 'Curso Mesa Posta',
             'planId' => null,
-            'planName' => null,
+            'planName' => 'Curso Mesa Posta',
             'quantity' => 1,
             'priceInCents' => $valorCentavos,
         ]],
