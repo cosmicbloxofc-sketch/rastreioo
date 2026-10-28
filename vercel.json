@@ -20,19 +20,11 @@
       "destination": "/api/pagamento.php"
     },
     {
-      "source": "/pagamento/api.php",
-      "destination": "/api/pagamento.php"
-    },
-    {
       "source": "/pagamento",
       "destination": "/api/pagamento-page.php"
     },
     {
       "source": "/pagamento/",
-      "destination": "/api/pagamento-page.php"
-    },
-    {
-      "source": "/pagamento/index.php",
       "destination": "/api/pagamento-page.php"
     },
     {
