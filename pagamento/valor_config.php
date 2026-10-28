@@ -11,7 +11,7 @@ return [
             'utmify' => 'Curso Mesa Posta',
         ],
         'up1' => [
-            'valor_centavos' => 385,
+            'valor_centavos' => 500,
             'gateway' => 'Tributo TENF',
             'utmify' => 'Curso Mesa Posta - UP1',
         ],

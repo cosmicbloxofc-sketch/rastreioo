@@ -42,3 +42,6 @@
 [27/08/2026 00:22:34] e9382be3ad864a989eff7218f6eece1c status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
 [27/08/2026 04:51:52] 13766fb21eb044b7b4102b531009905e status=waiting_payment http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
 [27/08/2026 04:53:21] 13766fb21eb044b7b4102b531009905e status=paid http=404 ok=0 resp={"OK":false,"data":{"type":"API_CREDENTIAL"},"result":"ERROR","statusCode":404,"message":"API_CREDENTIAL_NOT_FOUND"}
+[28/10/2026 03:16:49] 01M6085A0XS70Z0PRT50ARQTQ0 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[28/10/2026 03:16:50] 01M6085B17AFTNE69X07121E93 status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
+[28/10/2026 03:17:20] 01M60868E586ZY7C65J03AWGEJ status=waiting_payment http=200 ok=1 resp={"OK":true,"data":[],"result":"SUCCESS"}
