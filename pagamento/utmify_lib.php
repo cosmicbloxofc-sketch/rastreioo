@@ -162,9 +162,9 @@ function utmifyMontarPayload(array $order, string $status, ?string $approvedDate
         ],
         'products' => [[
             'id' => 'curso-mesa-posta',
-            'name' => 'Curso Mesa Posta',
+            'name' => (string)($order['productName'] ?? 'Curso Mesa Posta'),
             'planId' => null,
-            'planName' => 'Curso Mesa Posta',
+            'planName' => (string)($order['productName'] ?? 'Curso Mesa Posta'),
             'quantity' => 1,
             'priceInCents' => $valorCentavos,
         ]],

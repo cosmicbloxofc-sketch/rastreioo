@@ -2,7 +2,27 @@
 declare(strict_types=1);
 
 $valorConfig = require __DIR__ . '/valor_config.php';
-$valorCentavos = (int)($valorConfig['valor_centavos'] ?? 6161);
+$produtosConfig = is_array($valorConfig['produtos'] ?? null) ? $valorConfig['produtos'] : [];
+$produtoKey = 'main';
+
+$produtoParam = isset($_GET['produto']) ? strtolower(trim((string)$_GET['produto'])) : '';
+if ($produtoParam !== '' && isset($produtosConfig[$produtoParam])) {
+    $produtoKey = $produtoParam;
+}
+
+$valorCentavos = (int)($produtosConfig[$produtoKey]['valor_centavos'] ?? ($valorConfig['valor_centavos'] ?? 6161));
+
+if (isset($_GET['valor']) && $_GET['valor'] !== '') {
+    $valorParam = (int)$_GET['valor'];
+    foreach ($produtosConfig as $k => $p) {
+        if ((int)($p['valor_centavos'] ?? 0) === $valorParam) {
+            $valorCentavos = $valorParam;
+            $produtoKey = (string)$k;
+            break;
+        }
+    }
+}
+
 $valorFormatado = number_format($valorCentavos / 100, 2, ',', '.');
 
 $nome = isset($_GET['nome']) ? trim((string)$_GET['nome']) : '';
@@ -193,6 +213,7 @@ $codigoRastreio = $codigoRaw !== ''
 <script>
 (function () {
   const valorCentavos = <?php echo json_encode((string) $valorCentavos); ?>;
+  const produtoKey = <?php echo json_encode($produtoKey); ?>;
   const timerEl = document.getElementById('pixTimer');
   const pixInput = document.getElementById('pixCopiaCola');
   const qrLoading = document.getElementById('pixQrLoading');
@@ -247,6 +268,22 @@ $codigoRastreio = $codigoRaw !== ''
         statusMsg.hidden = false;
         statusMsg.className = 'pix-status-msg success';
         statusMsg.textContent = 'Pagamento confirmado! Sua encomenda será liberada em breve.';
+
+        const proximoUp = { main: 'up1', up1: 'up2', up2: 'up3' }[produtoKey] || '';
+        if (proximoUp) {
+          setTimeout(function () {
+            const q = new URLSearchParams();
+            q.set('nome', document.getElementById('name').value.trim());
+            q.set('cpf', document.getElementById('document').value.trim());
+            q.set('email', document.getElementById('email').value.trim());
+            q.set('telefone', document.getElementById('telephone').value.trim());
+            const t = getTrackingPayload();
+            Object.keys(t).forEach(function (k) {
+              if (t[k] !== null && t[k] !== undefined && t[k] !== '') q.set(k, t[k]);
+            });
+            window.location.href = '/' + proximoUp + '/?' + q.toString();
+          }, 1200);
+        }
       } catch (err) {}
     }, 5000);
   }
@@ -391,6 +428,7 @@ $codigoRastreio = $codigoRaw !== ''
           cidade: 'Brasília',
           estado: 'DF',
           valor: valorCentavos,
+          produto: produtoKey,
           trackingParameters: getTrackingPayload(),
           fbp: readCookie('_fbp') || null,
           fbc: readCookie('_fbc') || (getFbCookieParams().fbc || null),

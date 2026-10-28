@@ -202,9 +202,13 @@ function metaCapiEnviarPurchase(array $order, string $eventId, ?string $eventTim
     $customData = [
         'currency' => 'BRL',
         'value' => round($valorReais, 2),
-        'content_name' => 'Taxa de liberacao de encomenda',
+        'content_name' => (string)($order['productName'] ?? 'Curso Mesa Posta'),
         'content_type' => 'product',
-        'contents' => [['id' => 'taxa-liberacao-encomenda', 'quantity' => 1, 'item_price' => round($valorReais, 2)]],
+        'contents' => [[
+            'id' => (string)($order['produto'] ?? 'curso-mesa-posta'),
+            'quantity' => 1,
+            'item_price' => round($valorReais, 2),
+        ]],
         'num_items' => 1,
         'order_id' => (string)$order['orderId'],
     ];

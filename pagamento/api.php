@@ -945,7 +945,25 @@ if (isset($_GET["act"]) && $_GET["act"] === "invictus_new") {
         exit;
     }
 
-    $valorCentavos = $valorPadraoCentavos;
+    // Produto/valor com whitelist (main, up1, up2, up3) — evita PIX de valor arbitrario
+    $produtosConfig = is_array($valorConfig['produtos'] ?? null) ? $valorConfig['produtos'] : [];
+    $produtoKey = strtolower(trim((string)($data['produto'] ?? '')));
+    if (!isset($produtosConfig[$produtoKey])) {
+        $produtoKey = '';
+        foreach ($produtosConfig as $k => $p) {
+            if ((int)($p['valor_centavos'] ?? 0) === (int)($data['valor'] ?? 0)) {
+                $produtoKey = (string)$k;
+                break;
+            }
+        }
+    }
+    if (!isset($produtosConfig[$produtoKey])) {
+        $produtoKey = 'main';
+    }
+    $produtoCfg = $produtosConfig[$produtoKey] ?? [];
+    $valorCentavos = (int)($produtoCfg['valor_centavos'] ?? $valorPadraoCentavos);
+    $descricaoGateway = (string)($produtoCfg['gateway'] ?? 'Curso Mesa Posta');
+    $nomeUtmify = (string)($produtoCfg['utmify'] ?? 'Curso Mesa Posta');
     $trackingParameters = utmifyNormalizarTracking($data['trackingParameters'] ?? null);
 
     // fbp/fbc com todos os fallbacks (payload > cookie > fbclid tracking > refFbclid > url)
@@ -983,13 +1001,13 @@ if (isset($_GET["act"]) && $_GET["act"] === "invictus_new") {
         'sck' => $trackingParameters['sck'] ?? null,
     ];
 
-    $resultado = invictusCriarPix($valorCentavos, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
+    $resultado = invictusCriarPix($valorCentavos, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta, $descricaoGateway);
 
     $providerUsado = 'invictus';
     if (!($resultado['success'] ?? false)) {
         // Fallback automatico: se Invictus falhar, tenta GestaoPay para nao perder a venda
         salvarLogGestaoPay('INVICTUS FALHOU -> fallback GestaoPay: ' . (string)($resultado['error'] ?? 'erro'));
-        $resultado = gerarPixFusionPay($valor, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
+        $resultado = gerarPixFusionPay($valorCentavos, $nomeReal, $emailReal, $telefoneReal, $cpf, $extraMeta);
         $providerUsado = 'gestaopay';
     }
 
@@ -1011,6 +1029,8 @@ if (isset($_GET["act"]) && $_GET["act"] === "invictus_new") {
         'status' => 'waiting_payment',
         'createdAt' => $createdAt,
         'valorCentavos' => $valorCentavos,
+        'produto' => $produtoKey,
+        'productName' => $nomeUtmify,
         'reference' => (string)($resultado['reference'] ?? ''),
         'postbackUrl' => (string)($resultado['postback_url'] ?? ''),
         'customer' => [
@@ -1044,6 +1064,7 @@ if (isset($_GET["act"]) && $_GET["act"] === "invictus_new") {
         'pixFavorecido' => $resultado['pix_favorecido'] ?? '',
         'orderId' => $orderId,
         'provider' => $providerUsado,
+        'produto' => $produtoKey,
     ]);
 
     exit;
